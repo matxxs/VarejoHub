@@ -1,0 +1,6 @@
+@VarejoHub.Api.Query_HostAddress = http://localhost:5109
+
+GET {{VarejoHub.Api.Query_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

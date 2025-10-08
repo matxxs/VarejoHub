@@ -1,0 +1,11 @@
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\bin\Debug\net9.0\VarejoHub.Domain.deps.json
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\bin\Debug\net9.0\VarejoHub.Domain.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\bin\Debug\net9.0\VarejoHub.Domain.pdb
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\VarejoHub.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\VarejoHub.Domain.AssemblyInfoInputs.cache
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\VarejoHub.Domain.AssemblyInfo.cs
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\VarejoHub.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\VarejoHub.Domain.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\refint\VarejoHub.Domain.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\VarejoHub.Domain.pdb
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Domain\obj\Debug\net9.0\ref\VarejoHub.Domain.dll

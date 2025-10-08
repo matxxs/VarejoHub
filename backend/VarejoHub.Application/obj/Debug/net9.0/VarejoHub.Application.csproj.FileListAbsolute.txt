@@ -1,0 +1,15 @@
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\bin\Debug\net9.0\VarejoHub.Application.deps.json
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\bin\Debug\net9.0\VarejoHub.Application.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\bin\Debug\net9.0\VarejoHub.Application.pdb
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\bin\Debug\net9.0\VarejoHub.Domain.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\bin\Debug\net9.0\VarejoHub.Domain.pdb
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.csproj.AssemblyReference.cache
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.AssemblyInfoInputs.cache
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.AssemblyInfo.cs
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.csproj.CoreCompileInputs.cache
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHu.DF8D2BE6.Up2Date
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\refint\VarejoHub.Application.dll
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\VarejoHub.Application.pdb
+C:\Users\Dev02\Desktop\Projetos\varejohub\backend\VarejoHub.Application\obj\Debug\net9.0\ref\VarejoHub.Application.dll
