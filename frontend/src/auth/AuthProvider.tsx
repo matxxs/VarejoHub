@@ -2,7 +2,8 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
-import { Supermarket, User } from '../api/auth-requests'; 
+import { Supermarket } from '../api/auth/auth-requests'; 
+import { User, getMe } from '../api/management/user'; // Verifique se a interface User está correta
 
 const TOKEN_KEY = 'jwt_token'; 
 
@@ -12,23 +13,12 @@ export type AuthContextType = {
   supermarketData: Supermarket | null;
   isAuthenticated: boolean;
   isAuthLoaded: boolean;
-  login: (token: string) => void; 
+  // AJUSTE: 'login' agora retorna uma promessa que resolve para 'boolean'
+  login: (token: string) => Promise<boolean>; 
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-
-// Você deve substituir isso pela chamada real à sua API (ex: GET /api/users/me)
-async function fetchUserData(token: string): Promise<{ user: User, supermarket: Supermarket }> {
-    console.log("Simulando busca de dados do usuário com o token...");
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    return {
-        user: { email: 'user@exemplo.com', name: 'Nome do Usuário', acessLevel: 'Gerente', globalAdmin: false },
-        supermarket: { supermarketId: 101, nameFantasy: 'Super Varejo Hub', status: 'Ativo' }
-    };
-}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -36,29 +26,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [supermarketData, setSupermarketData] = useState<Supermarket | null>(null);
   const [isAuthLoaded, setIsAuthLoaded] = useState(false); 
   
-  const loadUserData = async (jwt: string) => {
-    try {  
-      setToken(jwt);
+  // AJUSTE: loadUserData agora retorna true/false indicando o sucesso
+  const loadUserData = async (jwt: string): Promise<boolean> => {
+    try {   
+      setToken(jwt); 
 
-        const { user, supermarket } = await fetchUserData(jwt);
-        
+      const response = await getMe(); 
+      
+      if (response.isSuccess && response.value) {
+        const user = response.value;
         setUserData(user);
-        setSupermarketData(supermarket);
+        
+        // CORREÇÃO DE BUG: A propriedade no JSON é 'supermercado' (minúsculo)
+        setSupermarketData(user.supermercado); 
         
         console.log("Dados do usuário carregados com sucesso.");
+        return true; // Sucesso
+      } else {
+        console.error("Falha ao carregar dados do usuário:", response.error);
+        handleLogout();
+        return false; // Falha
+      }
 
     } catch (error) {
-        console.error("Falha ao carregar dados do usuário com o token:", error);
-        handleLogout();
+      console.error("Erro crítico ao carregar dados do usuário:", error);
+      handleLogout();
+      return false; // Falha
     } finally {
-        setIsAuthLoaded(true);
+      // Mesmo que falhe, a autenticação foi "carregada" (como falha)
+      setIsAuthLoaded(true);
     }
   };
 
-  const handleLogin = (jwt: string) => {
+  // AJUSTE: handleLogin agora é 'async' e repassa o resultado (true/false) do loadUserData
+  const handleLogin = async (jwt: string): Promise<boolean> => {
     Cookies.set(TOKEN_KEY, jwt, { expires: 7, secure: true, sameSite: 'Strict' });
-
-    loadUserData(jwt);
+    // 'await' e retorna o resultado booleano
+    return await loadUserData(jwt); 
   };
 
   const handleLogout = () => {
@@ -72,9 +76,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = Cookies.get(TOKEN_KEY);
 
     if (storedToken) {
-      loadUserData(storedToken);
+      loadUserData(storedToken); // Aqui não precisamos do 'await'
     } else {
-      setIsAuthLoaded(true);
+      setIsAuthLoaded(true); 
     }
   }, []); 
 
@@ -84,11 +88,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider 
       value={{ 
         token, 
-        userData, // Adicionado ao contexto
-        supermarketData, // Adicionado ao contexto
+        userData,
+        supermarketData,
         isAuthenticated, 
         isAuthLoaded, 
-        login: handleLogin, 
+        login: handleLogin, // Passa a nova função 'async'
         logout: handleLogout 
       }}
     >

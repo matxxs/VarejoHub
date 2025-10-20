@@ -197,7 +197,8 @@ namespace VarejoHub.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPlano"));
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("EAtivo")
                         .HasColumnType("bit");
@@ -212,6 +213,24 @@ namespace VarejoHub.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("PossuiControleEstoque")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PossuiFidelidade")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PossuiFinanceiro")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PossuiPDV")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PossuiRelatoriosAvancados")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PossuiSuportePrioritario")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("ValorMensal")
                         .HasColumnType("decimal(10, 2)");

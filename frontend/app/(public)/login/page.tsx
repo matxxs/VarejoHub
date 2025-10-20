@@ -12,7 +12,7 @@ import { Mail, ArrowLeft } from "lucide-react"
 import { useAuth } from "@/src/auth/AuthProvider"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
-import { EmailRequest, generateMagicLink, magicLogin } from "@/src/api/auth-requests"
+import { EmailRequest, generateMagicLink, magicLogin } from "@/src/api/auth/auth-requests"
 import { toast } from "sonner"
 import { useMagicLinkMutation } from "@/src/hooks/queries/use-auth"
 

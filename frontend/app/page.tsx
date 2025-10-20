@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Package, ShoppingCart, Users, TrendingUp } from "lucide-react"
 import { useAuth } from "@/src/auth/AuthProvider"
+import PricingTable from "@/components/ui/pricing-table"
 
 export default function IndexPage() {
+  
   const { isAuthenticated } = useAuth()
 
   return (
@@ -165,29 +167,14 @@ export default function IndexPage() {
                   Lucro por Produto para maximizar seus ganhos.
                 </CardDescription>
               </CardHeader>
+
             </Card>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <Image src="/supermarket-team-working-together-professional-ret.jpg" alt="Equipe VarejoHub" fill className="object-cover opacity-10" />
-          </div>
-          <div className="relative z-10 text-center bg-primary/5 rounded-2xl p-12 border border-primary/20 backdrop-blur-sm">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
-              Pronto para transformar sua gestão?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 text-pretty">
-              Junte-se a centenas de supermercados que já otimizaram suas operações com o VarejoHub
-            </p>
-            <Button size="lg" className="text-base px-8" asChild>
-              <Link href="/register">Começar Gratuitamente</Link>
-            </Button>
-          </div>
-        </div>
+      <section id="precos" className="container mx-auto px-4 py-20">
+        <PricingTable />
       </section>
 
       {/* Footer */}

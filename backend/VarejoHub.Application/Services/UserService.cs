@@ -1,4 +1,5 @@
-﻿using VarejoHub.Application.Interfaces.Repositories;
+﻿using VarejoHub.Application.DTOs;
+using VarejoHub.Application.Interfaces.Repositories;
 using VarejoHub.Application.Interfaces.Services;
 using VarejoHub.Domain.Entities;
 
@@ -59,9 +60,33 @@ namespace VarejoHub.Application.Services
             await _usuarioRepository.DeleteAsync(id);
         }
 
-        public Task<User?> GetByIdAsync(int id)
+        public async Task<UserDto?> GetByIdAsync(int id)
         {
-            return _usuarioRepository.GetByIdAsync(id);
+            var userEntity = await _usuarioRepository.GetByIdAsync(id); 
+
+            if (userEntity == null)
+            {
+                return null;
+            }
+
+            var userDto = new UserDto
+            {
+                IdUsuario = userEntity.IdUsuario,
+                IdSupermercado = userEntity.IdSupermercado,
+                Email = userEntity.Email,
+                Nome = userEntity.Nome,
+                NivelAcesso = userEntity.NivelAcesso,
+                EGlobalAdmin = userEntity.EGlobalAdmin,
+
+                // Mapeia o Supermercado (se existir) para o DTO básico
+                Supermercado = userEntity.Supermercado == null ? null : new SupermarketDto
+                {
+                    IdSupermercado = userEntity.Supermercado.IdSupermercado,
+                    NomeFantasia = userEntity.Supermercado.NomeFantasia
+                }
+            };
+
+            return userDto;
         }
 
         public Task<IEnumerable<User>> GetAllBySupermarketIdAsync(int supermarketId)

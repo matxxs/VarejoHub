@@ -4,7 +4,7 @@ using VarejoHub.Domain.Entities;
 
 namespace VarejoHub.Application.Services;
 
-internal class ProductService : IProductService
+public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
     private readonly ISubscriptionRepository _subscriptionRepository;

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { generateMagicLink, EmailRequest, Result, register, RegisterRequest } from '@/src/api/auth-requests';
+import { generateMagicLink, EmailRequest, Result, register, RegisterRequest } from '@/src/api/auth/auth-requests';
 
 export const useMagicLinkMutation = (
     setIsSubmitted: (state: boolean) => void,

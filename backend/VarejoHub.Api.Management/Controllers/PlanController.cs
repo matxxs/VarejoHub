@@ -5,6 +5,8 @@ using VarejoHub.Domain.Entities;
 
 namespace VarejoHub.Api.Management.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class PlanController : ControllerBase
     {
         private readonly IPlanService _planService;

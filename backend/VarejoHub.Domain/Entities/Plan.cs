@@ -18,7 +18,7 @@ namespace VarejoHub.Domain.Entities
         [Column(TypeName = "decimal(10, 2)")]
         public decimal ValorMensal { get; set; }
 
-        [Column(TypeName = "nvarchar(max)")]
+        [MaxLength(255)]
         public string? Descricao { get; set; }
 
         public int? LimiteUsuarios { get; set; }
@@ -26,6 +26,24 @@ namespace VarejoHub.Domain.Entities
         public int? LimiteProdutos { get; set; }
 
         public bool EAtivo { get; set; } = true;
+
+        [Required]
+        public bool PossuiPDV { get; set; } = false;
+
+        [Required]
+        public bool PossuiControleEstoque { get; set; } = false;
+
+        [Required]
+        public bool PossuiFinanceiro { get; set; } = false;
+
+        [Required]
+        public bool PossuiFidelidade { get; set; } = false;
+
+        [Required]
+        public bool PossuiRelatoriosAvancados { get; set; } = false;
+
+        [Required]
+        public bool PossuiSuportePrioritario { get; set; } = false;
 
         public ICollection<Subscription> Assinaturas { get; set; }
     }

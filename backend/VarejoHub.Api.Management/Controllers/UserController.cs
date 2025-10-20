@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using VarejoHub.Application.Interfaces.Services;
 
 namespace VarejoHub.Api.Management.Controllers
 {
     [Authorize]
+    [ApiController] 
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -14,8 +17,32 @@ namespace VarejoHub.Api.Management.Controllers
             _userService = userService;
         }
 
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        [HttpGet("supermarket/{supermarketId}/users")]
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("Token inválido ou não contém o ID do usuário.");
+            }
+
+            if (!int.TryParse(userIdString, out var userId))
+            {
+                return Unauthorized("Formato de ID inválido no token.");
+            }
+
+            var user = await _userService.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("Usuário não encontrado.");
+            }
+
+            return Ok(user);
+        }
+
+
+        [HttpGet("supermarket/{supermarketId}/  ")]
         public async Task<IActionResult> GetUsersBySupermarket(int supermarketId)
         {
             var users = await _userService.GetAllBySupermarketIdAsync(supermarketId);

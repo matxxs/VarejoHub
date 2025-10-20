@@ -6,6 +6,8 @@ using VarejoHub.Domain.Entities;
 namespace VarejoHub.Api.Management.Controllers
 {
     [Authorize]
+    [ApiController] 
+    [Route("[controller]")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

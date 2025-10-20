@@ -11,6 +11,14 @@ public class UserRepository : Repository<User>, IUserRepository
     {
     }
 
+    public override async Task<User?> GetByIdAsync(int id)
+    {
+        return await _dbSet
+            .Include(u => u.Supermercado) 
+            .FirstOrDefaultAsync(u => u.IdUsuario == id); 
+    }
+
+
     public async Task<IEnumerable<User>> GetAllBySupermarketIdAsync(int supermarketId)
     {
         return await _dbSet.Where(u => u.IdSupermercado == supermarketId).ToListAsync();

@@ -1,4 +1,5 @@
-import { authApi } from './api';
+import { authApi } from '../api';
+import { User } from '../management/user';
 
 /**
  * Representa o resultado de uma operação.
@@ -32,17 +33,10 @@ export interface LoginResponse {
   supermarket: Supermarket
 }
 
-export interface User {
-  email: string;
-  name: string;
-  acessLevel: string;
-  globalAdmin: boolean
-}
 
 export interface Supermarket {
   supermarketId: number;
   nameFantasy: string;
-  status: string;
 }
 
 
@@ -57,9 +51,9 @@ export async function generateMagicLink(data: EmailRequest): Promise<Result<void
 }
 
 
-export async function magicLogin(token: string, email: string): Promise<Result<LoginResponse>> {
+export async function magicLogin(token: string): Promise<Result<LoginResponse>> {
   const response = await authApi.get<Result<LoginResponse>>('/api/auth/magic-login', {
-    params: { token, email }
+    params: { token }
   });
 
   return response.data;

@@ -1,21 +1,25 @@
 import axios, { InternalAxiosRequestConfig, AxiosError } from 'axios';
+import Cookies from 'js-cookie';
+
+const TOKEN_KEY = 'jwt_token';
 
 const getAuthToken = () => {
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('jwt_token');
+        return Cookies.get(TOKEN_KEY);
     }
     return null;
 };
 
+// API de autenticação (pública por padrão)
 export const authApi = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_AUTH,
 });
 
-// Ações para o logout centralizado
+
 const handleUnauthorized = () => {
     if (typeof window !== 'undefined') {
-        localStorage.removeItem('jwt_token');
-        window.location.replace('/login?sessionExpired=true'); 
+        Cookies.remove(TOKEN_KEY);
+        window.location.replace('/login?sessionExpired=true');
     }
 };
 
@@ -27,7 +31,7 @@ const createAuthenticatedApi = (baseURL: string) => {
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-        return config; 
+        return config;
     }, (error) => {
         return Promise.reject(error);
     });
@@ -47,4 +51,11 @@ const createAuthenticatedApi = (baseURL: string) => {
 }
 
 export const managementApi = createAuthenticatedApi(process.env.NEXT_PUBLIC_API_MANAGEMENT!);
+
+
 export const queryApi = createAuthenticatedApi(process.env.NEXT_PUBLIC_API_QUERY!);
+
+
+export const publicManagementApi = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_MANAGEMENT!,
+});

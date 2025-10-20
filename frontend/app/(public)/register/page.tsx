@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import { RegisterRequest } from "@/src/api/auth-requests"
+import { RegisterRequest } from "@/src/api/auth/auth-requests"
 import { useRegisterMutation } from "@/src/hooks/queries/use-auth"
 
 // CNPJ validation regex (format: 00.000.000/0000-00)
@@ -114,9 +114,6 @@ return (
             </div>
             <span className="text-xl font-bold text-gray-800">VarejoHub</span>
           </Link>
-          <Button variant="ghost" asChild>
-            <Link href="/login">Já tenho conta</Link>
-          </Button>
         </div>
       </header>
 
