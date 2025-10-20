@@ -1,0 +1,49 @@
+# === GERAL ===
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.env
+
+# === FRONTEND (Next.js em /frontend) ===
+**/node_modules/
+**/.next/
+**/.turbo/
+**/.vercel/
+**/out/
+**/.env
+**/.env.local
+**/.env.*.local
+# **/package-lock.json
+**/pnpm-lock.yaml
+**/yarn.lock
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+**/.vscode/
+
+# === TODAS AS APIS .NET (maximus/ + api/*) ===
+**/bin/
+**/obj/
+**/publish/
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.suo
+#**/Properties/launchSettings.json
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/secrets.json
+**/wwwroot/dist/
+
+# === IDEs e arquivos de build temporários ===
+.vscode/
+*.ncrunchproject
+*.localhistory
+*.idea/
+*.sln.docstates
+.vs/
+
+AppUpdater

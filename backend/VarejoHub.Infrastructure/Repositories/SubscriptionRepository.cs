@@ -26,4 +26,9 @@ public class SubscriptionRepository : Repository<Subscription>, ISubscriptionRep
             .Where(a => a.StatusAssinatura == "Ativa" && a.DataProximoVencimento <= dateThreshold)
             .ToListAsync();
     }
+
+    public async Task<int> CountSubscriptionsByPlanAsync(int planId)
+    {
+        return await _dbSet.Where(w => w.IdPlano == planId).CountAsync();
+    }
 }

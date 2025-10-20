@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VarejoHub.Application.Interfaces.Services;
 using VarejoHub.Domain.Entities;
 
 namespace VarejoHub.Api.Management.Controllers
 {
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

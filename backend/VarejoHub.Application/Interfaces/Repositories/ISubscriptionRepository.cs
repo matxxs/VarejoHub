@@ -14,4 +14,5 @@ public interface ISubscriptionRepository
     // Specific Queries
     Task<IEnumerable<Subscription>> GetByStatusAsync(string status);
     Task<IEnumerable<Subscription>> GetExpiringSubscriptionsAsync(DateOnly dateThreshold);
+    Task<int> CountSubscriptionsByPlanAsync(int planId);
 }

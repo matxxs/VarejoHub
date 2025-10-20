@@ -177,3 +177,5 @@ C:\Users\mathe\OneDrive\Documentos\GitHub\VarejoHub\backend\VarejoHub.Api.Manage
 C:\Users\mathe\OneDrive\Documentos\GitHub\VarejoHub\backend\VarejoHub.Api.Management\obj\Debug\net9.0\VarejoHub.Api.Management.pdb
 C:\Users\mathe\OneDrive\Documentos\GitHub\VarejoHub\backend\VarejoHub.Api.Management\obj\Debug\net9.0\VarejoHub.Api.Management.genruntimeconfig.cache
 C:\Users\mathe\OneDrive\Documentos\GitHub\VarejoHub\backend\VarejoHub.Api.Management\obj\Debug\net9.0\ref\VarejoHub.Api.Management.dll
+C:\Users\mathe\OneDrive\Documentos\GitHub\VarejoHub\backend\VarejoHub.Api.Management\bin\Debug\net9.0\Microsoft.AspNetCore.Authorization.dll
+C:\Users\mathe\OneDrive\Documentos\GitHub\VarejoHub\backend\VarejoHub.Api.Management\bin\Debug\net9.0\Microsoft.AspNetCore.Metadata.dll

@@ -31,7 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("GlobalAdminPolicy", policy =>
+        policy.RequireClaim("IsGlobalAdmin", "True"));
 
 builder.Services.AddCors(options =>
 {
@@ -39,7 +41,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                //.WithOrigins("http://localhost:3000")
+                .WithOrigins("http://localhost:3000")
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();

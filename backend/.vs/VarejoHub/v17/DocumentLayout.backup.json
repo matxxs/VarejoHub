@@ -3,20 +3,48 @@
   "WorkspaceRootPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.application\\services\\authenticationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|solutionrelative:varejohub.application\\services\\authenticationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{53894522-9B4B-43AB-98B1-DFD4CC9E5AAF}|VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.api.management\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53894522-9B4B-43AB-98B1-DFD4CC9E5AAF}|VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj|solutionrelative:varejohub.api.management\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.infrastructure\\repositories\\supermarketrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|solutionrelative:varejohub.infrastructure\\repositories\\supermarketrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.infrastructure\\repositories\\supplierrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|solutionrelative:varejohub.infrastructure\\repositories\\supplierrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.infrastructure\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|solutionrelative:varejohub.infrastructure\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.application\\services\\planservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|solutionrelative:varejohub.application\\services\\planservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.application\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|solutionrelative:varejohub.application\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.infrastructure\\repositories\\planrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|solutionrelative:varejohub.infrastructure\\repositories\\planrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.application\\interfaces\\repositories\\iplanrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|solutionrelative:varejohub.application\\interfaces\\repositories\\iplanrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53894522-9B4B-43AB-98B1-DFD4CC9E5AAF}|VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.api.management\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53894522-9B4B-43AB-98B1-DFD4CC9E5AAF}|VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj|solutionrelative:varejohub.api.management\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53894522-9B4B-43AB-98B1-DFD4CC9E5AAF}|VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.api.management\\varejohub.api.management.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{53894522-9B4B-43AB-98B1-DFD4CC9E5AAF}|VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj|solutionrelative:varejohub.api.management\\varejohub.api.management.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22E56A52-7C0F-40E8-AFEA-AB8A4F26D10B}|VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.api.auth\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22E56A52-7C0F-40E8-AFEA-AB8A4F26D10B}|VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj|solutionrelative:varejohub.api.auth\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.application\\services\\authenticationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B0E0DF23-273C-4AEC-8F59-E6A92E235297}|VarejoHub.Application\\VarejoHub.Application.csproj|solutionrelative:varejohub.application\\services\\authenticationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.infrastructure\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|solutionrelative:varejohub.infrastructure\\repositories\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{22E56A52-7C0F-40E8-AFEA-AB8A4F26D10B}|VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.api.auth\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -31,8 +59,8 @@
       "RelativeMoniker": "D:0:0:{22E56A52-7C0F-40E8-AFEA-AB8A4F26D10B}|VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj|solutionrelative:varejohub.api.auth\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Migrations\\20251020130823_Cria\u00E7\u00E3oDoBanco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:VarejoHub.Infrastructure\\Migrations\\20251020130823_Cria\u00E7\u00E3oDoBanco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|c:\\users\\mathe\\onedrive\\documentos\\github\\varejohub\\backend\\varejohub.infrastructure\\migrations\\20251020130823_cria\u00E7\u00E3odobanco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3D22A446-A367-4B19-9D7E-0D9C11EC7661}|VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj|solutionrelative:varejohub.infrastructure\\migrations\\20251020130823_cria\u00E7\u00E3odobanco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +70,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -75,19 +103,84 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SupermarketRepository.cs",
-              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\SupermarketRepository.cs",
-              "RelativeDocumentMoniker": "VarejoHub.Infrastructure\\Repositories\\SupermarketRepository.cs",
-              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\SupermarketRepository.cs",
-              "RelativeToolTip": "VarejoHub.Infrastructure\\Repositories\\SupermarketRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAvAAAAAAAAAA==",
+              "Title": "SupplierRepository.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\SupplierRepository.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Infrastructure\\Repositories\\SupplierRepository.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\SupplierRepository.cs",
+              "RelativeToolTip": "VarejoHub.Infrastructure\\Repositories\\SupplierRepository.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-20T13:48:25.743Z",
+              "WhenOpened": "2025-10-20T15:23:52.997Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PlanRepository.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\PlanRepository.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Infrastructure\\Repositories\\PlanRepository.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\PlanRepository.cs",
+              "RelativeToolTip": "VarejoHub.Infrastructure\\Repositories\\PlanRepository.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T14:32:40.325Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "PlanService.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\PlanService.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Application\\Services\\PlanService.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\PlanService.cs",
+              "RelativeToolTip": "VarejoHub.Application\\Services\\PlanService.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAmwG0AAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T14:27:43.978Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Management\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Api.Management\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Management\\Controllers\\UserController.cs",
+              "RelativeToolTip": "VarejoHub.Api.Management\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T14:25:17.613Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProductController.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Management\\Controllers\\ProductController.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Api.Management\\Controllers\\ProductController.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Management\\Controllers\\ProductController.cs",
+              "RelativeToolTip": "VarejoHub.Api.Management\\Controllers\\ProductController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T14:22:49.262Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "VarejoHub.Api.Management",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj",
+              "RelativeDocumentMoniker": "VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj",
+              "RelativeToolTip": "VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-20T14:23:59.006Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "Repository.cs",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Repositories\\Repository.cs",
               "RelativeDocumentMoniker": "VarejoHub.Infrastructure\\Repositories\\Repository.cs",
@@ -100,12 +193,12 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 9,
               "Title": "AuthenticationService.cs",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\AuthenticationService.cs",
               "RelativeDocumentMoniker": "VarejoHub.Application\\Services\\AuthenticationService.cs",
-              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\AuthenticationService.cs*",
-              "RelativeToolTip": "VarejoHub.Application\\Services\\AuthenticationService.cs*",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\AuthenticationService.cs",
+              "RelativeToolTip": "VarejoHub.Application\\Services\\AuthenticationService.cs",
               "ViewState": "AgIAANMAAAAAAAAAAAAmwOUAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-20T13:39:56.921Z",
@@ -113,7 +206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 11,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "VarejoHub.Api.Auth\\Properties\\launchSettings.json",
@@ -126,20 +219,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 12,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\Program.cs",
               "RelativeDocumentMoniker": "VarejoHub.Api.Auth\\Program.cs",
               "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\Program.cs",
               "RelativeToolTip": "VarejoHub.Api.Auth\\Program.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAAAEkAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAIBJwEkAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-20T13:11:36.954Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 14,
               "Title": "20251020130823_Cria\u00E7\u00E3oDoBanco.cs",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\Migrations\\20251020130823_Cria\u00E7\u00E3oDoBanco.cs",
               "RelativeDocumentMoniker": "VarejoHub.Infrastructure\\Migrations\\20251020130823_Cria\u00E7\u00E3oDoBanco.cs",
@@ -152,7 +245,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 13,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\appsettings.json",
               "RelativeDocumentMoniker": "VarejoHub.Api.Auth\\appsettings.json",
@@ -165,15 +258,83 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "VarejoHub.Api.Auth\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\Controllers\\AuthController.cs",
               "RelativeToolTip": "VarejoHub.Api.Auth\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAYwEcAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAiwGIAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-20T13:04:05.825Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "76ac2837-ae06-44fb-8129-f67d69b5ab7e",
+        "Display": 0,
+        "X": 290,
+        "Y": 110,
+        "Width": 1258,
+        "Height": 652,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\ProductService.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Application\\Services\\ProductService.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Services\\ProductService.cs",
+              "RelativeToolTip": "VarejoHub.Application\\Services\\ProductService.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAkwCQAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T14:31:41.002Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "5543dfb9-fdef-42d9-896b-daf8444de0d6",
+        "Display": 0,
+        "X": 209,
+        "Y": 58,
+        "Width": 1258,
+        "Height": 652,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IPlanRepository.cs",
+              "DocumentMoniker": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Interfaces\\Repositories\\IPlanRepository.cs",
+              "RelativeDocumentMoniker": "VarejoHub.Application\\Interfaces\\Repositories\\IPlanRepository.cs",
+              "ToolTip": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\Interfaces\\Repositories\\IPlanRepository.cs",
+              "RelativeToolTip": "VarejoHub.Application\\Interfaces\\Repositories\\IPlanRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-20T14:45:13.858Z",
               "EditorCaption": ""
             }
           ]

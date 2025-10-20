@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VarejoHub.Application.Interfaces.Services;
 
 namespace VarejoHub.Api.Management.Controllers
 {
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
