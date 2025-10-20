@@ -32,7 +32,6 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Result))]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        // 1. Mapeia o DTO para Entidades de Domínio
         var supermarket = new Supermarket
         {
             NomeFantasia = request.NomeFantasia,

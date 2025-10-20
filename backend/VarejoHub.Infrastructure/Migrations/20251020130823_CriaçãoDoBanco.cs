@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace VarejoHub.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateWithSeed : Migration
+    public partial class CriaçãoDoBanco : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,10 +36,9 @@ namespace VarejoHub.Infrastructure.Migrations
                     IdSupermercado = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NomeFantasia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    RazaoSocial = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Cnpj = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
-                    DataAdesao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    DataInicioTrial = table.Column<DateOnly>(type: "date", nullable: true)
+                    DataAdesao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

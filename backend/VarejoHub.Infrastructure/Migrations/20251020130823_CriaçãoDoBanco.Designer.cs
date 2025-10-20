@@ -12,8 +12,8 @@ using VarejoHub.Infrastructure.Data;
 namespace VarejoHub.Infrastructure.Migrations
 {
     [DbContext(typeof(VarejoHubDbContext))]
-    [Migration("20251003154556_AtualizandoInfoSupermacado")]
-    partial class AtualizandoInfoSupermacado
+    [Migration("20251020130823_CriaçãoDoBanco")]
+    partial class CriaçãoDoBanco
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -431,9 +431,6 @@ namespace VarejoHub.Infrastructure.Migrations
                     b.Property<DateTime>("DataAdesao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateOnly?>("DataInicioTrial")
-                        .HasColumnType("date");
-
                     b.Property<string>("NomeFantasia")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -443,11 +440,6 @@ namespace VarejoHub.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("IdSupermercado");
 

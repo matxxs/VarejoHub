@@ -11,6 +11,13 @@ namespace VarejoHub.Infrastructure.Repositories
         {
         }
 
+        public override async Task<Supermarket?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(supermarket => supermarket.Assinatura)
+                .FirstOrDefaultAsync(supermarket => supermarket.IdSupermercado == id);
+        }
+
         public async Task<Supermarket?> GetByCnpjAsync(string cnpj)
         {
             return await _dbSet.FirstOrDefaultAsync(s => s.Cnpj == cnpj);
@@ -19,11 +26,6 @@ namespace VarejoHub.Infrastructure.Repositories
         public async Task<bool> CnpjExistsAsync(string cnpj)
         {
             return await _dbSet.AnyAsync(s => s.Cnpj == cnpj);
-        }
-
-        public async Task<IEnumerable<Supermarket>> GetByStatusAsync(string status)
-        {
-            return await _dbSet.Where(s => s.Status == status).ToListAsync();
         }
     }
 }

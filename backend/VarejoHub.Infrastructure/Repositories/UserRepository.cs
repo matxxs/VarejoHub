@@ -35,4 +35,9 @@ public class UserRepository : Repository<User>, IUserRepository
     {
         return await _dbSet.Where(u => u.EGlobalAdmin).ToListAsync();
     }
+
+    public async Task<int> GetCountBySupermarketIdAsync(int supermarketId)
+    {
+        return await _dbSet.CountAsync(u => u.IdSupermercado == supermarketId);
+    }
 }

@@ -428,9 +428,6 @@ namespace VarejoHub.Infrastructure.Migrations
                     b.Property<DateTime>("DataAdesao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateOnly?>("DataInicioTrial")
-                        .HasColumnType("date");
-
                     b.Property<string>("NomeFantasia")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -440,11 +437,6 @@ namespace VarejoHub.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("IdSupermercado");
 

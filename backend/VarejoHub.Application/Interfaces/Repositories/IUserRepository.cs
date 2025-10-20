@@ -16,4 +16,5 @@ public interface IUserRepository
     Task<User?> GetByTemporaryTokenAsync(string token);
     Task<IEnumerable<User>> GetByAccessLevelAsync(string accessLevel);
     Task<IEnumerable<User>> GetGlobalAdminsAsync();
+    Task<int> GetCountBySupermarketIdAsync(int supermarketId);
 }

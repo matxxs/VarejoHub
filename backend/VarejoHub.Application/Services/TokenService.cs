@@ -18,7 +18,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(User user)
+    public string GenerateToken(User user, Supermarket? supermarket)
     {
 
         var claims = new List<Claim>
@@ -29,7 +29,7 @@ public class TokenService : ITokenService
             new("IsGlobalAdmin", user.EGlobalAdmin.ToString()),
             new("SupermarketId", user.IdSupermercado.HasValue ? user.IdSupermercado.Value.ToString() : "N/A"),
             
-            new("SupermarketStatus", user.Supermercado?.Status ?? "GLOBAL") 
+            new("SupermarketStatus", supermarket?.Assinatura?.StatusAssinatura ?? "GLOBAL") 
         };
 
         var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:SecretKey"] ??

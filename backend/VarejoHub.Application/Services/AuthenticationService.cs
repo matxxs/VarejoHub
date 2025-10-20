@@ -8,46 +8,6 @@ using VarejoHub.Domain.Entities;
 namespace VarejoHub.Application.Services;
 
 
-public class LoginReponse
-{
-    public string Token { get; set; } = string.Empty;
-    public UserDto User { get; set; } = new();
-    public SupermarketDto Supermarket { get; set; } = new();
-}
-
-public class UserDto
-{
-    public string Email { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public string AcessLevel { get; set; } = string.Empty; 
-    public bool GlobalAdmin { get; set; }                
-}
-
-public class SupermarketDto
-{
-    public int SupermarketId { get; set; }
-    public string NameFantasy { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
-}
-
-//var response = new LoginReponse
-//{   
-//    Token = jwtToken,
-//    User = new UserDto
-//    {
-//        Name = user.Nome,
-//        Email = user.Email,
-//        AcessLevel = user.NivelAcesso,
-//        GlobalAdmin = user.EGlobalAdmin
-//    },
-//    Supermarket = user.EGlobalAdmin ? new SupermarketDto() : new SupermarketDto
-//    {
-//        SupermarketId = user.Supermercado?.IdSupermercado ?? 0,
-//        NameFantasy = user.Supermercado?.NomeFantasia ?? "Administração Global",
-//        Status = user.Supermercado?.Status ?? "GLOBAL"
-//    }
-//};
-
 public class AuthenticationService : IAuthenticationService
 {
     private readonly ISupermarketRepository _supermarketRepository;
@@ -88,6 +48,39 @@ public class AuthenticationService : IAuthenticationService
             return Result<string>.FailT("Credenciais inválidas ou link expirado.");
         }
 
+        Supermarket? supermarket = null;
+
+        if (!user.EGlobalAdmin)
+        {
+            var supermarketId = user.IdSupermercado.GetValueOrDefault();
+
+            supermarket = await _supermarketRepository.GetByIdAsync(supermarketId);
+            if (supermarket is null)
+            {
+                _logger.LogWarning("Login failed for {Email}: Supermarket ID {SupermarketId} not found.", email, supermarketId);
+                return Result<string>.FailT("Supermercado não encontrado.");
+            }
+
+            // Tempo de acesso 14 dias
+            if (supermarket.Assinatura.StatusAssinatura == "Trial")
+            {
+                var diasDesdeAdesao = (DateTime.UtcNow - supermarket.DataAdesao).TotalDays;
+                if (diasDesdeAdesao > 14)
+                {
+                    _logger.LogWarning("Login failed for {Email}: Trial period expired.", email);
+                    return Result<string>.FailT("O período de teste grátis expirou. Por favor, entre em contato com o suporte.");
+                }
+            }
+
+            if(supermarket.Assinatura.StatusAssinatura == "Inadimplente" || 
+                supermarket.Assinatura.StatusAssinatura == "Cancelada" ||
+                supermarket.Assinatura.StatusAssinatura == "Bloqueada")
+            {
+                _logger.LogWarning("Login failed for {Email}: Supermarket subscription status is {Status}.", email, supermarket.Assinatura.StatusAssinatura);
+                return Result<string>.FailT("O acesso ao sistema está bloqueado devido ao status da assinatura do supermercado. Por favor, entre em contato com o suporte.");
+            }
+        }
+
         if (user.TokenAcessoTemporario != token)
         {
             _logger.LogWarning("Login failed for {Email}: Token mismatch.", email);
@@ -100,7 +93,7 @@ public class AuthenticationService : IAuthenticationService
             return Result<string>.FailT("O link de acesso temporário expirou.");
         }
 
-        var jwtToken = _jwtService.GenerateToken(user);
+        var jwtToken = _jwtService.GenerateToken(user, supermarket);
 
         user.TokenAcessoTemporario = null;
         user.DataExpiracaoToken = null;
@@ -126,8 +119,10 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            supermarket.Status = "Trial";
-            supermarket.DataInicioTrial = DateOnly.FromDateTime(DateTime.Now);
+            supermarket.Assinatura.DataInicioVigencia = DateOnly.FromDateTime(DateTime.Now);
+            supermarket.Assinatura.DataProximoVencimento = DateOnly.FromDateTime(DateTime.Now.AddDays(14));
+            supermarket.Assinatura.StatusAssinatura = "Trial";
+
             supermarket.DataAdesao = DateTime.Now;
 
             await _supermarketRepository.AddAsync(supermarket);
@@ -188,7 +183,7 @@ public class AuthenticationService : IAuthenticationService
     private async Task SendLoginMagicLink(string email, string token, User user, Supermarket? supermarket)
     {
         var supermarketName = supermarket?.NomeFantasia ?? "Administrador Global";
-        var status = supermarket?.Status ?? "Global";
+        var status = supermarket?.Assinatura?.StatusAssinatura ?? "Global";
 
         var magicLinkUrl = $"http://localhost:5054/api/auth/magic-login?token={token}&email={email}";
 
@@ -232,7 +227,7 @@ public class AuthenticationService : IAuthenticationService
         return status switch
         {
             "Trial" => "<span style=\"display: inline-block; padding: 4px 12px; background-color: #10b981; color: #ffffff; font-size: 12px; font-weight: 600; border-radius: 12px;\">Ativo - Teste Grátis</span>",
-            "Ativo" => "<span style=\"display: inline-block; padding: 4px 12px; background-color: #2563eb; color: #ffffff; font-size: 12px; font-weight: 600; border-radius: 12px;\">Ativo</span>",
+            "Ativa" => "<span style=\"display: inline-block; padding: 4px 12px; background-color: #2563eb; color: #ffffff; font-size: 12px; font-weight: 600; border-radius: 12px;\">Ativo</span>",
             "Suspenso" => "<span style=\"display: inline-block; padding: 4px 12px; background-color: #ef4444; color: #ffffff; font-size: 12px; font-weight: 600; border-radius: 12px;\">Suspenso</span>",
             "Global" => "<span style=\"display: inline-block; padding: 4px 12px; background-color: #a855f7; color: #ffffff; font-size: 12px; font-weight: 600; border-radius: 12px;\">Admin Global</span>",
             _ => string.Empty

@@ -4,5 +4,5 @@ namespace VarejoHub.Application.Interfaces.Services;
 
 public interface ITokenService
 {
-    string GenerateToken(User user);
+    string GenerateToken(User user, Supermarket? supermarket);
 }

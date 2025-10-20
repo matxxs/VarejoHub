@@ -14,5 +14,4 @@ public interface ISupermarketRepository
     // Specific Queries
     Task<Supermarket?> GetByCnpjAsync(string cnpj);
     Task<bool> CnpjExistsAsync(string cnpj);
-    Task<IEnumerable<Supermarket>> GetByStatusAsync(string status);
 }

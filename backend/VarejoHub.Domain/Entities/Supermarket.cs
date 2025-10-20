@@ -26,9 +26,6 @@ namespace VarejoHub.Domain.Entities
 
         [Required]
         [MaxLength(20)]
-        public string Status { get; set; } // CHECK: 'Ativo', 'Suspenso', 'Trial'
-
-        public DateOnly? DataInicioTrial { get; set; }
 
         // Propriedades de Navegação (Coleções)
         public ICollection<User> Usuarios { get; set; }

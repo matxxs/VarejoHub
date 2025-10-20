@@ -1,25 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj": {}
+    "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj": {
+    "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj",
+        "projectUniqueName": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj",
         "projectName": "VarejoHub.Api.Auth",
-        "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj",
-        "packagesPath": "C:\\Users\\Dev02\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Api.Auth\\obj\\",
+        "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj",
+        "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Api.Auth\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dev02\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
+          "C:\\Users\\mathe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -28,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -36,8 +33,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj"
+              "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj"
               }
             }
           }
@@ -88,26 +85,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj": {
+    "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj",
+        "projectUniqueName": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj",
         "projectName": "VarejoHub.Application",
-        "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj",
-        "packagesPath": "C:\\Users\\Dev02\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Application\\obj\\",
+        "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj",
+        "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dev02\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
+          "C:\\Users\\mathe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -116,7 +111,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -124,8 +118,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj": {
-                "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj"
+              "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj": {
+                "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj"
               }
             }
           }
@@ -179,26 +173,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj": {
+    "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj",
         "projectName": "VarejoHub.Domain",
-        "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj",
-        "packagesPath": "C:\\Users\\Dev02\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Domain\\obj\\",
+        "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Domain\\VarejoHub.Domain.csproj",
+        "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dev02\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
+          "C:\\Users\\mathe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -207,7 +199,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -248,26 +239,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj": {
+    "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj",
         "projectName": "VarejoHub.Infrastructure",
-        "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Dev02\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\VarejoHub.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\mathe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dev02\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
+          "C:\\Users\\mathe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -276,7 +265,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -284,8 +272,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj": {
-                "projectPath": "C:\\Users\\Dev02\\Desktop\\Projetos\\varejohub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj"
+              "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj": {
+                "projectPath": "C:\\Users\\mathe\\OneDrive\\Documentos\\GitHub\\VarejoHub\\backend\\VarejoHub.Application\\VarejoHub.Application.csproj"
               }
             }
           }
@@ -339,7 +327,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
