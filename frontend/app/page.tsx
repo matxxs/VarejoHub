@@ -1,12 +1,18 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { useState, useEffect } from "react"
+import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 // --- Imports de Componentes (shadcn/ui) ---
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -15,13 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // Imports para o novo menu de usuário
 import {
   DropdownMenu,
@@ -30,27 +31,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 // --- Imports de Ícones ---
-import { 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  TrendingUp, 
+import {
+  Package,
+  ShoppingCart,
+  Users,
+  TrendingUp,
   CheckCircle2,
   XCircle,
   Loader2,
   User as UserIcon, // Ícone de usuário para o menu
-  LogOut            // Ícone de logout
-} from "lucide-react"
+  LogOut, // Ícone de logout
+} from "lucide-react";
 
 // --- Imports de Lógica de Negócio (Auth e API) ---
-import { useAuth } from "@/src/auth/AuthProvider"
-import { User } from "@/src/api/management/user" // Importando a interface User
-import { getActivePlans, Plan as ApiPlan } from "@/src/api/management/plant"
-import { cn } from "@/lib/utils"
-
+import { useAuth } from "@/src/auth/AuthProvider";
+import { User } from "@/src/api/management/user"; // Importando a interface User
+import { getActivePlans, Plan as ApiPlan } from "@/src/api/management/plant";
+import { cn } from "@/lib/utils";
+import { Navbar } from "../components/navbar";
 
 // --- LÓGICA DE DADOS (Movida do PricingTable) ---
 // (As interfaces e funções 'transformApiPlans' e 'getPlanButtonClass' continuam aqui)
@@ -82,7 +83,7 @@ function getPlanButtonClass(planName: string): string {
     case "Básico":
       return "bg-blue-600 hover:bg-blue-700 text-white";
     case "Profissional":
-      return "bg-purple-600 hover:bg-purple-700 text-white"; 
+      return "bg-purple-600 hover:bg-purple-700 text-white";
     case "Premium":
       return "bg-yellow-500 hover:bg-yellow-600 text-black";
     default:
@@ -100,28 +101,48 @@ function transformApiPlans(apiPlans: ApiPlan[]): Plan[] {
       description: apiPlan.descricao || "Plano de acesso ao VarejoHub",
       priceMonthly: monthlyPrice,
       priceYearly: yearlyPrice,
-      billedYearlyText: `Cobrado R$ ${yearlyPrice.toFixed(2).replace(".", ",")} /ano`,
+      billedYearlyText: `Cobrado R$ ${yearlyPrice
+        .toFixed(2)
+        .replace(".", ",")} /ano`,
       discount: monthlyPrice > 0 ? "Economize 2 meses" : undefined,
       isPopular: apiPlan.nomePlano === "Profissional",
-      buttonText: apiPlan.nomePlano === "Free" ? "Começar Grátis" : "Assinar Agora",
+      buttonText:
+        apiPlan.nomePlano === "Free" ? "Começar Grátis" : "Assinar Agora",
       buttonColorClass: getPlanButtonClass(apiPlan.nomePlano),
       features: [
         {
-          text: `${apiPlan.limiteUsuarios === 999 ? 'Ilimitados' : apiPlan.limiteUsuarios} Usuários`,
-          included: true
+          text: `${
+            apiPlan.limiteUsuarios === 999
+              ? "Ilimitados"
+              : apiPlan.limiteUsuarios
+          } Usuários`,
+          included: true,
         },
         {
-          text: `${apiPlan.limiteProdutos === 99999 ? 'Ilimitados' : apiPlan.limiteProdutos} Produtos`,
-          included: true
+          text: `${
+            apiPlan.limiteProdutos === 99999
+              ? "Ilimitados"
+              : apiPlan.limiteProdutos
+          } Produtos`,
+          included: true,
         },
       ],
       additionalFeatures: [
         { text: "PDV (Ponto de Venda)", included: apiPlan.possuiPDV },
-        { text: "Controle de Estoque", included: apiPlan.possuiControleEstoque },
+        {
+          text: "Controle de Estoque",
+          included: apiPlan.possuiControleEstoque,
+        },
         { text: "Módulo Financeiro", included: apiPlan.possuiFinanceiro },
         { text: "Fidelidade de Clientes", included: apiPlan.possuiFidelidade },
-        { text: "Relatórios Avançados", included: apiPlan.possuiRelatoriosAvancados },
-        { text: "Suporte Prioritário", included: apiPlan.possuiSuportePrioritario },
+        {
+          text: "Relatórios Avançados",
+          included: apiPlan.possuiRelatoriosAvancados,
+        },
+        {
+          text: "Suporte Prioritário",
+          included: apiPlan.possuiSuportePrioritario,
+        },
       ],
     };
   });
@@ -129,15 +150,13 @@ function transformApiPlans(apiPlans: ApiPlan[]): Plan[] {
 
 // --- FIM DA LÓGICA DE DADOS ---
 
-
 // --- COMPONENTE PRINCIPAL ---
 
 export default function IndexPage() {
-
   // --- Hooks de Autenticação e Estado ---
   const { isAuthenticated, userData, isAuthLoaded, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  
+
   const plan = userData?.supermercado?.plano.nomePlano;
   const isFree = plan === "Free";
 
@@ -170,19 +189,19 @@ export default function IndexPage() {
     }
   }, [isAuthenticated, isFree]); // Depende do status de autenticação
 
-  const upgradePlans = plans.filter(p => p.name !== 'Free');
+  const upgradePlans = plans.filter((p) => p.name !== "Free");
 
   // --- Handlers ---
-const handleLogoutClick = () => {
-  setIsLoggingOut(true);
+  const handleLogoutClick = () => {
+    setIsLoggingOut(true);
 
-  // Dá 100ms para o React renderizar o spinner antes de mudar o contexto
-  setTimeout(() => {
-    logout();
-    // Você nem precisa mais do setIsLoggingOut(false), 
-    // pois o componente será destruído.
-  }, 100); 
-};
+    // Dá 100ms para o React renderizar o spinner antes de mudar o contexto
+    setTimeout(() => {
+      logout();
+      // Você nem precisa mais do setIsLoggingOut(false),
+      // pois o componente será destruído.
+    }, 100);
+  };
 
   if (!isAuthLoaded) {
     return (
@@ -194,20 +213,18 @@ const handleLogoutClick = () => {
 
   return (
     <div className="min-h-screen">
-      
       {/* --- HEADER --- */}
       <header className="border-b border-border bg-background/95 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          
-          {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">V</span>
+              <span className="text-primary-foreground font-bold text-lg">
+                V
+              </span>
             </div>
             <span className="text-xl font-bold text-foreground">VarejoHub</span>
           </div>
-          
-          {/* Conteúdo do Header (Condicional) */}
+
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <>
@@ -223,38 +240,56 @@ const handleLogoutClick = () => {
                           Escolha o plano que melhor se adapta ao seu negócio.
                         </DialogDescription>
                       </DialogHeader>
-                      
+
                       {isLoadingPlans ? (
                         <div className="flex justify-center items-center h-64">
                           <Loader2 className="h-10 w-10 animate-spin text-primary" />
                         </div>
                       ) : errorPlans ? (
                         <div className="flex justify-center items-center h-64">
-                          <p className="text-red-600 text-center px-4">{errorPlans}</p>
+                          <p className="text-red-600 text-center px-4">
+                            {errorPlans}
+                          </p>
                         </div>
                       ) : (
-                        <Tabs defaultValue="Profissional" className="w-full pt-2">
-                          <TabsList className={`grid w-full grid-cols-${upgradePlans.length}`}>
-                            {upgradePlans.map(plan => (
+                        <Tabs
+                          defaultValue="Profissional"
+                          className="w-full pt-2"
+                        >
+                          <TabsList
+                            className={`grid w-full grid-cols-${upgradePlans.length}`}
+                          >
+                            {upgradePlans.map((plan) => (
                               <TabsTrigger key={plan.name} value={plan.name}>
                                 {plan.name}
                               </TabsTrigger>
                             ))}
                           </TabsList>
-                          
-                          {upgradePlans.map(plan => (
+
+                          {upgradePlans.map((plan) => (
                             <TabsContent key={plan.name} value={plan.name}>
-                              <Card className={cn(plan.isPopular && "border-primary shadow-lg")}>
+                              <Card
+                                className={cn(
+                                  plan.isPopular && "border-primary shadow-lg"
+                                )}
+                              >
                                 <CardHeader>
                                   <CardTitle>{plan.name}</CardTitle>
                                   <CardDescription>
-                                    A partir de R$ {(plan.priceYearly / 12).toFixed(2).replace(".", ",")} /mês*
+                                    A partir de R${" "}
+                                    {(plan.priceYearly / 12)
+                                      .toFixed(2)
+                                      .replace(".", ",")}{" "}
+                                    /mês*
                                   </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4 text-sm max-h-60 overflow-y-auto pr-3">
                                   <ul className="space-y-2">
                                     {plan.features.map((feature, idx) => (
-                                      <li key={idx} className="flex items-center">
+                                      <li
+                                        key={idx}
+                                        className="flex items-center"
+                                      >
                                         <CheckCircle2 className="mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
                                         {feature.text}
                                       </li>
@@ -264,25 +299,32 @@ const handleLogoutClick = () => {
                                     Funcionalidades:
                                   </h3>
                                   <ul className="space-y-2">
-                                    {plan.additionalFeatures.map((feature, idx) => (
-                                      <li key={idx} className="flex items-center">
-                                        {feature.included ? (
-                                          <CheckCircle2 className="mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
-                                        ) : (
-                                          <XCircle className="mr-2 h-4 w-4 flex-shrink-0 text-gray-400" />
-                                        )}
-                                        {feature.text}
-                                      </li>
-                                    ))}
+                                    {plan.additionalFeatures.map(
+                                      (feature, idx) => (
+                                        <li
+                                          key={idx}
+                                          className="flex items-center"
+                                        >
+                                          {feature.included ? (
+                                            <CheckCircle2 className="mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
+                                          ) : (
+                                            <XCircle className="mr-2 h-4 w-4 flex-shrink-0 text-gray-400" />
+                                          )}
+                                          {feature.text}
+                                        </li>
+                                      )
+                                    )}
                                   </ul>
-                                  <p className="text-xs text-muted-foreground pt-2">*Valor no plano anual</p>
+                                  <p className="text-xs text-muted-foreground pt-2">
+                                    *Valor no plano anual
+                                  </p>
                                 </CardContent>
                               </Card>
                             </TabsContent>
                           ))}
                         </Tabs>
                       )}
-                      
+
                       <DialogFooter>
                         <Button asChild className="w-full" size="lg">
                           <Link href="/pricing">
@@ -294,10 +336,13 @@ const handleLogoutClick = () => {
                   </Dialog>
                 )}
 
-                {/* --- NOVO: Menu Dropdown do Usuário --- */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full"
+                    >
                       <UserIcon className="h-4 w-4" />
                       <span className="sr-only">Abrir menu do usuário</span>
                     </Button>
@@ -312,7 +357,11 @@ const handleLogoutClick = () => {
                       <Link href="/settings">Configurações</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogoutClick} disabled={isLoggingOut} className="text-red-600">
+                    <DropdownMenuItem
+                      onClick={handleLogoutClick}
+                      disabled={isLoggingOut}
+                      className="text-red-600"
+                    >
                       {isLoggingOut ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
@@ -324,16 +373,24 @@ const handleLogoutClick = () => {
                 </DropdownMenu>
               </>
             ) : (
-              // --- HEADER NÃO AUTENTICADO ---
               <>
                 <nav className="hidden md:flex items-center gap-6">
-                  <Link href="#modulos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#modulos"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Módulos
                   </Link>
-                  <Link href="#recursos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#recursos"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Recursos
                   </Link>
-                  <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="/pricing"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Preços
                   </Link>
                 </nav>
@@ -353,15 +410,14 @@ const handleLogoutClick = () => {
 
       <main>
         {isAuthenticated ? (
-          <DashboardContent userData={userData!} /> 
+          <DashboardContent userData={userData!} />
         ) : (
           <MarketplaceContent />
         )}
       </main>
     </div>
-  )
+  );
 }
-
 
 function MarketplaceContent() {
   return (
@@ -374,14 +430,19 @@ function MarketplaceContent() {
               VarejoHub: A Gestão de Supermercado Simples, Completa e na Nuvem
             </h1>
             <p className="text-lg text-muted-foreground text-pretty leading-relaxed">
-              Centralize Estoque, PDV, Financeiro e Fidelidade em uma única plataforma. Elimine perdas, otimize vendas e
-              tome decisões com dados em tempo real.
+              Centralize Estoque, PDV, Financeiro e Fidelidade em uma única
+              plataforma. Elimine perdas, otimize vendas e tome decisões com
+              dados em tempo real.
             </p>
             <div className="flex flex-col sm:flex-row items-start gap-4">
               <Button size="lg" className="text-base px-8" asChild>
                 <Link href="/register">Começar Agora</Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-base px-8 bg-transparent">
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-base px-8 bg-transparent"
+              >
                 Agendar Demo
               </Button>
             </div>
@@ -415,16 +476,23 @@ function MarketplaceContent() {
             {/* Estoque Module */}
             <Card className="border-2 hover:border-primary/50 transition-colors overflow-hidden py-0 pb-6">
               <div className="relative h-48 w-full">
-                <Image src="/supermarket-warehouse-inventory-shelves-with-organ.jpg" alt="Controle de estoque" fill className="object-cover" />
+                <Image
+                  src="/supermarket-warehouse-inventory-shelves-with-organ.jpg"
+                  alt="Controle de estoque"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <CardHeader>
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <Package className="w-6 h-6 text-primary" />
                 </div>
-                <CardTitle className="text-2xl">Controle Inteligente de Estoque</CardTitle>
+                <CardTitle className="text-2xl">
+                  Controle Inteligente de Estoque
+                </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Receba alertas de baixa, rastreie entradas por NF e gerencie perdas e vencimentos para garantir o giro
-                  ideal.
+                  Receba alertas de baixa, rastreie entradas por NF e gerencie
+                  perdas e vencimentos para garantir o giro ideal.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -432,16 +500,23 @@ function MarketplaceContent() {
             {/* PDV Module */}
             <Card className="border-2 hover:border-secondary/50 transition-colors overflow-hidden py-0 pb-6">
               <div className="relative h-48 w-full">
-                <Image src="/modern-supermarket-checkout-counter-with-pos-syste.jpg" alt="Ponto de venda" fill className="object-cover" />
+                <Image
+                  src="/modern-supermarket-checkout-counter-with-pos-syste.jpg"
+                  alt="Ponto de venda"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <CardHeader>
                 <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4">
                   <ShoppingCart className="w-6 h-6 text-secondary" />
                 </div>
-                <CardTitle className="text-2xl">Ponto de Venda (PDV) Ágil</CardTitle>
+                <CardTitle className="text-2xl">
+                  Ponto de Venda (PDV) Ágil
+                </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  PDV moderno com integração total para leitores de código de barras e balanças. Emissão de cupom fiscal
-                  rápida e sem erros.
+                  PDV moderno com integração total para leitores de código de
+                  barras e balanças. Emissão de cupom fiscal rápida e sem erros.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -449,16 +524,24 @@ function MarketplaceContent() {
             {/* Clientes Module */}
             <Card className="border-2 hover:border-accent/50 transition-colors overflow-hidden py-0 pb-6">
               <div className="relative h-48 w-full">
-                <Image src="/happy-customers-shopping-in-supermarket-with-shopp.jpg" alt="Fidelidade de clientes" fill className="object-cover" />
+                <Image
+                  src="/happy-customers-shopping-in-supermarket-with-shopp.jpg"
+                  alt="Fidelidade de clientes"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <CardHeader>
                 <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
                   <Users className="w-6 h-6 text-accent" />
                 </div>
-                <CardTitle className="text-2xl">Fidelidade e Personalização</CardTitle>
+                <CardTitle className="text-2xl">
+                  Fidelidade e Personalização
+                </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Construa relacionamentos duradouros. Cadastro de clientes, ofertas exclusivas e programa de pontos
-                  automático para aumentar o valor de cada compra.
+                  Construa relacionamentos duradouros. Cadastro de clientes,
+                  ofertas exclusivas e programa de pontos automático para
+                  aumentar o valor de cada compra.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -466,16 +549,24 @@ function MarketplaceContent() {
             {/* Financeiro Module */}
             <Card className="border-2 hover:border-chart-4/50 transition-colors overflow-hidden py-0 pb-6">
               <div className="relative h-48 w-full">
-                <Image src="/financial-dashboard-with-charts-and-analytics-for-.jpg" alt="Gestão financeira" fill className="object-cover" />
+                <Image
+                  src="/financial-dashboard-with-charts-and-analytics-for-.jpg"
+                  alt="Gestão financeira"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <CardHeader>
                 <div className="w-12 h-12 bg-chart-4/10 rounded-lg flex items-center justify-center mb-4">
                   <TrendingUp className="w-6 h-6 text-chart-4" />
                 </div>
-                <CardTitle className="text-2xl">Visão 360º das Finanças</CardTitle>
+                <CardTitle className="text-2xl">
+                  Visão 360º das Finanças
+                </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Domine seu Fluxo de Caixa diário. Controle contas a pagar/receber e visualize relatórios de Margem de
-                  Lucro por Produto para maximizar seus ganhos.
+                  Domine seu Fluxo de Caixa diário. Controle contas a
+                  pagar/receber e visualize relatórios de Margem de Lucro por
+                  Produto para maximizar seus ganhos.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -489,18 +580,31 @@ function MarketplaceContent() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">V</span>
+                <span className="text-primary-foreground font-bold text-sm">
+                  V
+                </span>
               </div>
-              <span className="text-sm text-muted-foreground">© 2025 VarejoHub. Todos os direitos reservados.</span>
+              <span className="text-sm text-muted-foreground">
+                © 2025 VarejoHub. Todos os direitos reservados.
+              </span>
             </div>
             <div className="flex items-center gap-6">
-              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Suporte
               </Link>
-              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Privacidade
               </Link>
-              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Termos
               </Link>
             </div>
@@ -511,7 +615,6 @@ function MarketplaceContent() {
   );
 }
 
-
 function DashboardContent({ userData }: { userData: User }) {
   return (
     <div className="container mx-auto px-4 py-12 md:py-20">
@@ -520,10 +623,10 @@ function DashboardContent({ userData }: { userData: User }) {
           Olá, {userData.nome}!
         </h1>
         <p className="text-lg text-muted-foreground text-pretty">
-          Bem-vindo ao seu dashboard VarejoHub. Aqui você pode gerenciar seu supermercado,
-          ver relatórios e muito mais.
+          Bem-vindo ao seu dashboard VarejoHub. Aqui você pode gerenciar seu
+          supermercado, ver relatórios e muito mais.
         </p>
-        
+
         {/* Adicione os componentes reais do seu dashboard aqui */}
         <div className="pt-8">
           <h2 className="text-2xl font-semibold mb-4">Acesso Rápido</h2>
@@ -531,7 +634,9 @@ function DashboardContent({ userData }: { userData: User }) {
             <Card>
               <CardHeader>
                 <CardTitle>Ver Vendas</CardTitle>
-                <CardDescription>Acompanhe suas vendas em tempo real.</CardDescription>
+                <CardDescription>
+                  Acompanhe suas vendas em tempo real.
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button asChild>
@@ -542,7 +647,9 @@ function DashboardContent({ userData }: { userData: User }) {
             <Card>
               <CardHeader>
                 <CardTitle>Gerenciar Estoque</CardTitle>
-                <CardDescription>Adicione produtos e controle o estoque.</CardDescription>
+                <CardDescription>
+                  Adicione produtos e controle o estoque.
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button asChild>
@@ -553,7 +660,9 @@ function DashboardContent({ userData }: { userData: User }) {
             <Card>
               <CardHeader>
                 <CardTitle>Módulo Financeiro</CardTitle>
-                <CardDescription>Veja seu fluxo de caixa e relatórios.</CardDescription>
+                <CardDescription>
+                  Veja seu fluxo de caixa e relatórios.
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button asChild>
