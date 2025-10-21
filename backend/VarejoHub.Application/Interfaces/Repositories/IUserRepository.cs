@@ -1,4 +1,5 @@
-﻿using VarejoHub.Domain.Entities;
+﻿using VarejoHub.Application.DTOs;
+using VarejoHub.Domain.Entities;
 
 namespace VarejoHub.Application.Interfaces.Repositories;
 
@@ -17,4 +18,5 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetByAccessLevelAsync(string accessLevel);
     Task<IEnumerable<User>> GetGlobalAdminsAsync();
     Task<int> GetCountBySupermarketIdAsync(int supermarketId);
+    Task<UserDto?> GetMe(int id);
 }

@@ -18,8 +18,7 @@ import {
   createProduct,
   updateProduct,
   getProductById,
-  type Product,
-  type Supermarket,
+  type Product
 } from "@/src/api/management/products"
 import { useAuth } from "@/src/auth/AuthProvider"
 
@@ -33,8 +32,6 @@ export default function CadastroProdutoPage() {
   const [isLoadingProduct, setIsLoadingProduct] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [supermarkets, setSupermarkets] = useState<Supermarket[]>([])
-  const [loadingSupermarkets, setLoadingSupermarkets] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
 
   const [formData, setFormData] = useState({

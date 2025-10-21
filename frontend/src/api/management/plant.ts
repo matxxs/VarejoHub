@@ -1,12 +1,17 @@
 import { managementApi, publicManagementApi } from '../api';
 
+export interface PlanSummary {
+  nomePlano: string;
+  statusAssinatura: string;
+}
+
 export interface Plan {
   idPlano: number;
   nomePlano: string;
   valorMensal: number;
-  descricao?: string;  
-  limiteUsuarios?: number;  
-  limiteProdutos?: number; 
+  descricao?: string;
+  limiteUsuarios?: number;
+  limiteProdutos?: number;
   eAtivo: boolean;
 
   possuiPDV: boolean;

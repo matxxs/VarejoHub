@@ -1,4 +1,5 @@
-﻿using VarejoHub.Application.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using VarejoHub.Application.DTOs;
 using VarejoHub.Application.Interfaces.Repositories;
 using VarejoHub.Application.Interfaces.Services;
 using VarejoHub.Domain.Entities;
@@ -60,33 +61,9 @@ namespace VarejoHub.Application.Services
             await _usuarioRepository.DeleteAsync(id);
         }
 
-        public async Task<UserDto?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            var userEntity = await _usuarioRepository.GetByIdAsync(id); 
-
-            if (userEntity == null)
-            {
-                return null;
-            }
-
-            var userDto = new UserDto
-            {
-                IdUsuario = userEntity.IdUsuario,
-                IdSupermercado = userEntity.IdSupermercado,
-                Email = userEntity.Email,
-                Nome = userEntity.Nome,
-                NivelAcesso = userEntity.NivelAcesso,
-                EGlobalAdmin = userEntity.EGlobalAdmin,
-
-                // Mapeia o Supermercado (se existir) para o DTO básico
-                Supermercado = userEntity.Supermercado == null ? null : new SupermarketDto
-                {
-                    IdSupermercado = userEntity.Supermercado.IdSupermercado,
-                    NomeFantasia = userEntity.Supermercado.NomeFantasia
-                }
-            };
-
-            return userDto;
+            return await _usuarioRepository.GetByIdAsync(id);
         }
 
         public Task<IEnumerable<User>> GetAllBySupermarketIdAsync(int supermarketId)
@@ -102,6 +79,11 @@ namespace VarejoHub.Application.Services
         public Task<int> GetCountBySupermarketIdAsync(int supermarketId)
         {
             return _usuarioRepository.GetCountBySupermarketIdAsync(supermarketId);
+        }
+
+        public async Task<UserDto?> GetMe(int id)
+        {
+            return await _usuarioRepository.GetMe(id);
         }
     }
 }

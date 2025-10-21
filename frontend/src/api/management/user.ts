@@ -9,7 +9,6 @@ export interface Result<T> {
 
 export interface User {
     idUsuario: number,
-    idSupermercado?: number,
     email: string,
     nome: string,
     nivelAcesso: 'Administrador' | 'Gerente' | 'Caixa' | 'Financeiro',

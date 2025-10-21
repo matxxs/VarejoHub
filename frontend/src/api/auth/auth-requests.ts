@@ -1,4 +1,5 @@
 import { authApi } from '../api';
+import {  PlanSummary } from '../management/plant';
 import { User } from '../management/user';
 
 /**
@@ -35,8 +36,9 @@ export interface LoginResponse {
 
 
 export interface Supermarket {
-  supermarketId: number;
-  nameFantasy: string;
+  idSupermercado: number;
+  nomeFantasia: string;
+  plano: PlanSummary
 }
 
 

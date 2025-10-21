@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { use } from 'react'
 import { useRouter } from 'next/navigation' 
 import { useAuth } from '@/src/auth/AuthProvider'
 import { LogOut } from 'lucide-react'
@@ -34,14 +34,18 @@ export default function DashboardPage() {
               </span>
             </p>
             {/* Você pode adicionar mais campos aqui se eles existirem em UserTokenData */}
-            {userData.acessLevel && (
+            {userData.nivelAcesso && (
                 <p className="text-gray-700">
                     <strong className="font-medium text-gray-900">Nível de Acesso (Role):</strong>{' '}
                     <span className="bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded-full text-xs">
-                        {userData.acessLevel}
+                        {userData.nivelAcesso}
                     </span>
                 </p>
             )}
+
+            <p>{userData.supermercado.nomeFantasia}</p>
+            <p>{userData.supermercado.plano.nomePlano}</p>
+            <p>{userData.supermercado.plano.statusAssinatura}</p>
           </>
         ) : (
           <p className="text-red-500 font-medium">Informações do usuário não carregadas.</p>

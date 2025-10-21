@@ -18,11 +18,6 @@ export interface Product {
     idSupermercado: number
 }
 
-export interface Supermarket {
-    idSupermercado: number
-    nomeFantasia: string
-}
-
 export async function getProductsBySupermarket(supermarketId: number): Promise<Result<Product[]>> {
     try {
         const response = await managementApi.get<Product[]>(`/product/supermarket/${supermarketId}/products`)

@@ -25,7 +25,6 @@ import {
   getProductsBySupermarket,
   deleteProduct,
   type Product,
-  type Supermarket,
 } from "@/src/api/management/products"
 import { useAuth } from "@/src/auth/AuthProvider"
 
@@ -35,7 +34,7 @@ export default function ProdutosPage() {
 
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
-  const [supermarkets, setSupermarkets] = useState<Supermarket[]>([])
+  // const [supermarkets, setSupermarkets] = useState<Supermarket[]>([])
   const [selectedSupermarket, setSelectedSupermarket] = useState<string>("")
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -230,7 +229,7 @@ export default function ProdutosPage() {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4">
               {/* Supermarket Selection (only for global admins) */}
-              {userData?.eGlobalAdmin && (
+              {/* {userData?.eGlobalAdmin && (
                 <div className="space-y-2">
                   <Label htmlFor="supermarket">Supermercado</Label>
                   <Select
@@ -250,7 +249,7 @@ export default function ProdutosPage() {
                     </SelectContent>
                   </Select>
                 </div>
-              )}
+              )} */}
 
               {/* Search Input */}
               <div className="space-y-2">

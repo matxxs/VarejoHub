@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { Supermarket } from '../api/auth/auth-requests'; 
-import { User, getMe } from '../api/management/user'; // Verifique se a interface User está correta
+import { User, getMe } from '../api/management/user';
 
 const TOKEN_KEY = 'jwt_token'; 
 
@@ -13,7 +13,6 @@ export type AuthContextType = {
   supermarketData: Supermarket | null;
   isAuthenticated: boolean;
   isAuthLoaded: boolean;
-  // AJUSTE: 'login' agora retorna uma promessa que resolve para 'boolean'
   login: (token: string) => Promise<boolean>; 
   logout: () => void;
 }
@@ -76,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = Cookies.get(TOKEN_KEY);
 
     if (storedToken) {
-      loadUserData(storedToken); // Aqui não precisamos do 'await'
+      loadUserData(storedToken);
     } else {
       setIsAuthLoaded(true); 
     }
@@ -92,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         supermarketData,
         isAuthenticated, 
         isAuthLoaded, 
-        login: handleLogin, // Passa a nova função 'async'
+        login: handleLogin, 
         logout: handleLogout 
       }}
     >

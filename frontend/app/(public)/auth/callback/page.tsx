@@ -184,7 +184,7 @@ export default function AuthCallbackPage() {
           setStatus("success");
 
           setTimeout(() => {
-            const redirectPath = localStorage.getItem("login_redirect") || "/dashboard";
+            const redirectPath = localStorage.getItem("login_redirect") || "/";
             localStorage.removeItem("login_redirect");
             router.replace(redirectPath);
           }, 1500);

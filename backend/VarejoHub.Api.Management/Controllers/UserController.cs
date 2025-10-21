@@ -32,7 +32,7 @@ namespace VarejoHub.Api.Management.Controllers
                 return Unauthorized("Formato de ID inválido no token.");
             }
 
-            var user = await _userService.GetByIdAsync(userId);
+            var user = await _userService.GetMe(userId);
             if (user == null)
             {
                 return NotFound("Usuário não encontrado.");

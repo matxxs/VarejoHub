@@ -1,13 +1,11 @@
-"use client";
+'use client'
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, Info, ArrowRight, Download, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-// 1. Importar a função da API e a interface
 import { getActivePlans, Plan as ApiPlan } from "@/src/api/management/plant"
 
-// 2. Esta é a interface que o SEU COMPONENTE usa
 type Feature = {
   text: string;
   included: boolean;
