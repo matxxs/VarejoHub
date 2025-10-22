@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -46,6 +41,7 @@ import {
   Loader2,
   User,
   Building,
+  CreditCard,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/src/auth/AuthProvider";
@@ -115,17 +111,19 @@ function transformApiPlans(apiPlans: ApiPlan[]): Plan[] {
       buttonColorClass: getPlanButtonClass(apiPlan.nomePlano),
       features: [
         {
-          text: `${apiPlan.limiteUsuarios === 999
-            ? "Ilimitados"
-            : apiPlan.limiteUsuarios
-            } Usuários`,
+          text: `${
+            apiPlan.limiteUsuarios === 999
+              ? "Ilimitados"
+              : apiPlan.limiteUsuarios
+          } Usuários`,
           included: true,
         },
         {
-          text: `${apiPlan.limiteProdutos === 99999
-            ? "Ilimitados"
-            : apiPlan.limiteProdutos
-            } Produtos`,
+          text: `${
+            apiPlan.limiteProdutos === 99999
+              ? "Ilimitados"
+              : apiPlan.limiteProdutos
+          } Produtos`,
           included: true,
         },
       ],
@@ -161,10 +159,11 @@ export function Navbar() {
 
   // --- Definição do Menu Marketplace (Não Autenticado) ---
   const marketplaceNavItems = [
-    { title: "Início", href: "/" },
-    { title: "Produtos", href: "/produtos" },
-    { title: "Sobre", href: "/sobre" },
-    { title: "Contato", href: "/contato" },
+    { title: "Início", href: "#home" },
+    { title: "Benefícios", href: "#beneficios" },
+    { title: "Módulos", href: "#modulos" },
+    { title: "Preços", href: "#precos" },
+    { title: "FAQs", href: "#faqs" },
   ];
 
   const plan = userData?.supermercado?.plano.nomePlano;
@@ -206,11 +205,7 @@ export function Navbar() {
     const nivel = userData.nivelAcesso;
     const isGlobal = userData.eGlobalAdmin;
 
-    if (
-      nivel === "Caixa" ||
-      nivel === "Gerente" ||
-      nivel === "Administrador"
-    ) {
+    if (nivel === "Caixa" || nivel === "Gerente" || nivel === "Administrador") {
       items.push({
         label: "Vendas",
         icon: <ShoppingCart className="h-4 w-4" />,
@@ -347,8 +342,8 @@ export function Navbar() {
                           activeDropdown === item.label
                             ? "text-foreground bg-foreground/10" // Estado de hover/dropdown
                             : isActive
-                              ? "text-primary hover:text-primary" // Estado ATIVO (página atual)
-                              : "text-muted-foreground hover:text-foreground" // Estado padrão
+                            ? "text-primary hover:text-primary" // Estado ATIVO (página atual)
+                            : "text-muted-foreground hover:text-foreground" // Estado padrão
                         )}
                       >
                         {item.icon}
@@ -397,7 +392,6 @@ export function Navbar() {
                       <Button className="cursor-pointer">Update</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[700px]">
-                      {/* ... (Conteúdo do Dialog de Planos - sem alteração) ... */}
                       <DialogHeader>
                         <DialogTitle>Faça o Upgrade do VarejoHub</DialogTitle>
                         <DialogDescription>
@@ -420,20 +414,21 @@ export function Navbar() {
                           defaultValue="Profissional"
                           className="w-full pt-2"
                         >
-                          {/* INÍCIO DA ALTERAÇÃO */}
                           <TabsList
                             className={cn(
-                              // REMOVIDO: "grid w-full h-auto p-1", `grid-cols-${upgradePlans.length}`
-                              "flex w-full h-auto p-1 space-x-1 justify-center max-w-full" // ADICIONADO: flex e space-x
+                              "flex w-full h-auto p-1 space-x-1 justify-center max-w-full"
                             )}
                           >
                             {upgradePlans.map((plan) => (
-                              <TabsTrigger key={plan.name} value={plan.name} className="truncate flex-1">
+                              <TabsTrigger
+                                key={plan.name}
+                                value={plan.name}
+                                className="truncate flex-1"
+                              >
                                 {plan.name}
                               </TabsTrigger>
                             ))}
                           </TabsList>
-                          {/* FIM DA ALTERAÇÃO */}
 
                           {upgradePlans.map((plan) => (
                             <TabsContent key={plan.name} value={plan.name}>
@@ -459,7 +454,7 @@ export function Navbar() {
                                         key={idx}
                                         className="flex items-center"
                                       >
-                                        <CheckCircle2 className="mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
+                                        <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
                                         {feature.text}
                                       </li>
                                     ))}
@@ -475,9 +470,9 @@ export function Navbar() {
                                           className="flex items-center"
                                         >
                                           {feature.included ? (
-                                            <CheckCircle2 className="mr-2 h-4 w-4 flex-shrink-0 text-green-500" />
+                                            <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" />
                                           ) : (
-                                            <XCircle className="mr-2 h-4 w-4 flex-shrink-0 text-gray-400" />
+                                            <XCircle className="mr-2 h-4 w-4 text-gray-400" />
                                           )}
                                           {feature.text}
                                         </li>
@@ -509,7 +504,7 @@ export function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="relative h-9 w-9 rounded-full cursor-pointer" // ADICIONADO cursor-pointer
+                      className="relative h-9 w-9 rounded-full cursor-pointer"
                     >
                       <Avatar className="h-9 w-9">
                         <AvatarImage
@@ -542,6 +537,10 @@ export function Navbar() {
                       <User className="mr-2 h-4 w-4" />
                       <span>Minha Conta</span>
                     </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      <span>Atualizar Plano</span>
+                    </DropdownMenuItem>
                     {userData?.nivelAcesso === "Administrador" && (
                       <DropdownMenuItem className="cursor-pointer">
                         <Building className="mr-2 h-4 w-4" />
@@ -556,7 +555,7 @@ export function Navbar() {
                     <DropdownMenuItem
                       onClick={handleLogoutClick}
                       disabled={isLoggingOut}
-                      className="text-destructive focus:text-destructive cursor-pointer" // ADICIONADO cursor-pointer
+                      className="text-destructive focus:text-destructive cursor-pointer"
                     >
                       <span>
                         {isLoggingOut ? (
@@ -564,7 +563,6 @@ export function Navbar() {
                         ) : (
                           <LogOut className="mr-2 h-4 w-4" />
                         )}
-
                       </span>
                       Sair
                     </DropdownMenuItem>
@@ -588,7 +586,7 @@ export function Navbar() {
       {/* Dropdown (Mega Menu) */}
       {activeDropdown && (
         <div
-          className="fixed left-0 right-0 top-16 z-40 border-b border-border bg-foreground/20 backdrop-blur supports-[backdrop-filter]:bg-foreground/15 animate-in fade-in slide-in-from-top-2"
+          className="fixed left-0 right-0 top-16 z-40 border-b border-border bg-foreground/20 backdrop-blur animate-in fade-in slide-in-from-top-2"
           onMouseEnter={clearCloseTimeout}
           onMouseLeave={handleMouseLeave}
         >
@@ -597,7 +595,6 @@ export function Navbar() {
               {navigationItems
                 .find((item) => item.label === activeDropdown)
                 ?.items.map((subItem) => {
-
                   const isActive = pathname === subItem.href;
                   return (
                     <Link
@@ -605,9 +602,7 @@ export function Navbar() {
                       href={subItem.href}
                       className={cn(
                         "rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-background/80 cursor-pointer", // ADICIONADO cursor-pointer
-                        isActive
-                          ? "text-primary font-bold"
-                          : "text-foreground"
+                        isActive ? "text-primary font-bold" : "text-foreground"
                       )}
                     >
                       {subItem.title}

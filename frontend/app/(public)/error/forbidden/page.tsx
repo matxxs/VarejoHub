@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ShieldX, Home, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion";
+import { ShieldX, Home, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function ForbiddenPage() {
   return (
@@ -62,7 +62,10 @@ export default function ForbiddenPage() {
               }}
               className="absolute inset-0 bg-destructive/20 rounded-full blur-xl"
             />
-            <ShieldX className="w-24 h-24 text-destructive relative" strokeWidth={1.5} />
+            <ShieldX
+              className="w-24 h-24 text-destructive relative"
+              strokeWidth={1.5}
+            />
           </div>
         </motion.div>
 
@@ -74,7 +77,7 @@ export default function ForbiddenPage() {
           className="mb-6"
         >
           <h1 className="text-[120px] md:text-[180px] font-bold leading-none tracking-tighter text-balance">
-            <span className="bg-gradient-to-br from-destructive via-destructive/80 to-destructive/60 bg-clip-text text-transparent">
+            <span className="from-destructive via-destructive/80 to-destructive/60 bg-clip-text text-transparent">
               403
             </span>
           </h1>
@@ -87,10 +90,12 @@ export default function ForbiddenPage() {
           transition={{ delay: 0.4, duration: 0.6 }}
           className="space-y-4 mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground text-balance">Acesso Negado</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-foreground text-balance">
+            Acesso Negado
+          </h2>
           <p className="text-lg text-muted-foreground max-w-md mx-auto text-pretty">
-            Você não tem permissão para acessar esta página. Entre em contato com o administrador se acredita que isso é
-            um erro.
+            Você não tem permissão para acessar esta página. Entre em contato
+            com o administrador se acredita que isso é um erro.
           </p>
         </motion.div>
 
@@ -107,7 +112,12 @@ export default function ForbiddenPage() {
               Ir para Início
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="min-w-[160px] bg-transparent">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="min-w-[160px] bg-transparent"
+          >
             <Link href="javascript:history.back()" className="gap-2">
               <ArrowLeft className="w-4 h-4" />
               Voltar
@@ -128,5 +138,5 @@ export default function ForbiddenPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
