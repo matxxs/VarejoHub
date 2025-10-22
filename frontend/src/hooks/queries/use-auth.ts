@@ -38,7 +38,7 @@ export const useRegisterMutation = (
              setCreatedEmail(variables.emailAdmin);
         },
 
-        onSuccess: (data: Result<any>) => {
+        onSuccess: (data: Result<void>) => {
 
             if (data.isSuccess) {
                 toast.success('Link enviado! Cheque seu email. 📧');

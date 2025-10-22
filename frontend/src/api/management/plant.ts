@@ -1,4 +1,4 @@
-import { managementApi, publicManagementApi } from '../api';
+import { publicManagementApi } from '../api';
 
 export interface PlanSummary {
   nomePlano: string;

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Building2, CheckCircle2, Loader2, Sparkles } from "lucide-react"
+import { ArrowLeft, Building2, CheckCircle2, Loader2, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,7 +15,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { RegisterRequest } from "@/src/api/auth/auth-requests"
 import { useRegisterMutation } from "@/src/hooks/queries/use-auth"
 
-// CNPJ validation regex (format: 00.000.000/0000-00)
+
 const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/
 
 const formSchema = z.object({
@@ -32,7 +32,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 export default function RegisterPage() {
-   const [isSuccess, setIsSuccess] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
   const [createdEmail, setCreatedEmail] = useState<string>("")
   
   const registerMutation = useRegisterMutation(setIsSuccess, setCreatedEmail);
@@ -104,23 +104,21 @@ export default function RegisterPage() {
   }
 
 return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
-      {/* Header */}
-      <header className="w-full border-b border-gray-200 bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-4xl">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">V</span>
-            </div>
-            <span className="text-xl font-bold text-gray-800">VarejoHub</span>
-          </Link>
+    <div className="relative min-h-screen bg-gray-50 flex flex-col items-center">
+        {/* Botão para voltar ao início */}
+        <div className="absolute top-4 left-4 z-10">
+            <Button variant="ghost" asChild>
+                <Link href="/" className="flex items-center gap-2 text-muted-foreground">
+                    <ArrowLeft className="h-4 w-4" />
+                    <span>Voltar ao Início</span>
+                </Link>
+            </Button>
         </div>
-      </header>
 
       <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12 flex-grow">
         <div className="space-y-6">
           {/* Hero Text */}
-          <div className="text-center space-y-3 mb-8">
+          <div className="text-center space-y-3 mb-8 pt-10"> {/* Adicionado pt-10 para não sobrepor o botão */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-2">
               <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium text-primary">Teste grátis por 14 dias</span>

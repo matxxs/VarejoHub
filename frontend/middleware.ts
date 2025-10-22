@@ -1,67 +1,138 @@
-// src/middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+type NivelAcesso = 'Administrador' | 'Gerente' | 'Caixa' | 'Financeiro';
 
-// 1. Define as rotas públicas (onde a autenticação é opcional ou não necessária)
-const PUBLIC_PATHS = [
-    '/',
-    '/login',
-    '/auth/callback',
-    '/about', 
-    '/contact', 
-    // Adicione aqui todos os paths públicos (incluindo assets e APIs públicas se houver)
-]
-
-// 2. Define as rotas protegidas (todas que não estão em PUBLIC_PATHS)
-const PROTECTED_PREFIXES = ['/dashboard', '/relatorios', '/cadastro'] 
-
-export function middleware(request: NextRequest) {
-    const pathname = request.nextUrl.pathname
-    
-    // 3. Obtém o token do cookie (Middleware não acessa localStorage)
-    // O seu AuthProvider precisará ser modificado para salvar o JWT também em um cookie seguro (HttpOnly)
-    const isAuthenticated = request.cookies.has('jwt_token') 
-    
-    // 4. Determina se a rota atual é protegida
-    const isProtectedPath = PROTECTED_PREFIXES.some(prefix => pathname.startsWith(prefix))
-
-    // 5. Lógica de Redirecionamento
-    
-    // Caso 1: Usuário NÃO autenticado tentando acessar uma rota protegida
-    if (!isAuthenticated && isProtectedPath) {
-        // Salva a rota original para redirecionar após o login (se necessário)
-        const url = request.nextUrl.clone()
-        url.pathname = '/login'
-        url.searchParams.set('redirect', pathname) // Passa a rota original como search param
-        
-        return NextResponse.redirect(url)
-    }
-    
-    // Caso 2: Usuário autenticado tentando acessar a página de login
-    if (isAuthenticated && pathname === '/login') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/dashboard' // Redireciona para o dashboard
-        return NextResponse.redirect(url)
-    }
-
-    // 6. Caso a rota seja pública OU o usuário esteja autenticado em uma rota privada
-    return NextResponse.next()
+interface JwtPayload {
+    idUsuario?: number;
+    email?: string;
+    role: NivelAcesso;
+    eGlobalAdmin: boolean;
+    iat?: number;
+    exp?: number;
 }
 
-// 7. Configuração do matcher para o Middleware
+const ROLE_MAPS: Record<NivelAcesso, string[]> = {
+    Administrador: [
+        '/vendas',
+        '/cadastros',
+        '/financeiro',
+        '/gestao',
+    ],
+    Gerente: [
+        '/vendas', 
+        '/cadastros', 
+        '/financeiro'
+    ],
+    Caixa: [
+        '/vendas' 
+    ], 
+    Financeiro: [
+        '/financeiro'
+    ],
+};
+
+const SECURED_PREFIXES = [
+    '/vendas',
+    '/cadastros',
+    '/financeiro',
+    '/gestao',
+];
+
+
+const PUBLIC_PATHS = [
+    '/', 
+    '/login', 
+    '/register', 
+    '/auth/callback',
+    '/error/forbidden', 
+];
+
+function getJwtSecretKey(): Uint8Array {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        console.error('ERRO CRÍTICO: JWT_SECRET não está definido nas variáveis de ambiente');
+        throw new Error('JWT_SECRET não está definido nas variáveis de ambiente');
+    }
+    return new TextEncoder().encode(secret);
+}
+
+async function verifyToken(
+    token: string,
+): Promise<{ success: boolean; payload?: JwtPayload }> {
+    if (!token) {
+        return { success: false };
+    }
+    try {
+        const { payload } = await jwtVerify<JwtPayload>(
+            token,
+            getJwtSecretKey(),
+        );
+        return { success: true, payload };
+    } catch (error) {
+        if (error instanceof Error) {
+            console.warn('Falha na verificação do JWT:', error.message);
+        } else {
+            console.warn('Falha na verificação do JWT:', String(error));
+        }
+        return { success: false };
+    }
+}
+
+export async function middleware(request: NextRequest) {
+    const pathname = request.nextUrl.pathname;
+    const token = request.cookies.get('jwt_token')?.value;
+
+    if (PUBLIC_PATHS.includes(pathname)) {
+        return NextResponse.next();
+    }
+    
+    const isSecuredRoute = SECURED_PREFIXES.some(prefix => 
+        pathname === prefix || pathname.startsWith(`${prefix}/`)
+    );
+
+    if (!isSecuredRoute) {
+        return NextResponse.next();
+    }
+
+    const { success, payload } = await verifyToken(token || '');
+
+    if (!success || !payload || !payload.role) {        
+        const url = request.nextUrl.clone();
+        url.pathname = '/login'; 
+        url.searchParams.set('redirect', pathname);
+
+        const response = NextResponse.redirect(url);
+        response.cookies.delete('jwt_token');
+        return response; 
+    }
+
+    const userRole = payload.role; 
+    const isGlobalAdmin = payload.eGlobalAdmin;
+
+    if (isGlobalAdmin) {
+        return NextResponse.next();
+    }
+
+    const allowedPaths = ROLE_MAPS[userRole] || [];
+
+    const isAuthorized = allowedPaths.some((prefix) =>
+        pathname.startsWith(prefix),
+    );
+
+    if (isAuthorized) {
+        return NextResponse.next();
+    } else {
+        const url = request.nextUrl.clone();
+        url.pathname = '/error/forbidden'; 
+        return NextResponse.redirect(url);
+    }
+}
+
+
 export const config = {
-    // Aplica o middleware a todas as rotas, exceto:
-    // - _next/static (arquivos estáticos)
-    // - _next/image (imagens otimizadas)
-    // - favicon.ico, etc.
-    // - Rotas de API que não precisam de autenticação (se houver)
     matcher: [
-        /*
-         * Rotas para ignorar, ajuste conforme sua necessidade.
-         * Neste exemplo, ele rodará para tudo. Se quiser ser mais específico:
-         * '/((?!api|_next/static|_next/image|favicon.ico|login|login/callback).*)',
-         */
         '/((?!api|_next/static|_next/image|favicon.ico).*)',
     ],
-}
+};

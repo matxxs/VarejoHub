@@ -42,8 +42,8 @@ export interface Supermarket {
 }
 
 
-export async function register(data: RegisterRequest): Promise<Result<any>> {
-  const response = await authApi.post<Result<any>>('/api/auth/register', data);
+export async function register(data: RegisterRequest): Promise<Result<void>> {
+  const response = await authApi.post<Result<void>>('/api/auth/register', data);
   return response.data;
 }
 

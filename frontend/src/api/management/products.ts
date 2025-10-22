@@ -1,3 +1,5 @@
+// 1. Import the 'isAxiosError' type guard
+import { isAxiosError } from "axios"
 import { managementApi } from "../api"
 
 export interface Result<T> {
@@ -18,6 +20,11 @@ export interface Product {
     idSupermercado: number
 }
 
+
+type ApiError = {
+    message: string
+}
+
 export async function getProductsBySupermarket(supermarketId: number): Promise<Result<Product[]>> {
     try {
         const response = await managementApi.get<Product[]>(`/product/supermarket/${supermarketId}/products`)
@@ -26,29 +33,29 @@ export async function getProductsBySupermarket(supermarketId: number): Promise<R
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
-        return {
-            isSuccess: false,
-            error: error.response?.data?.message || "Erro ao buscar produtos",
+    } catch (error) {
+        const defaultError = "Erro ao buscar produtos"
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message }
         }
+        return { isSuccess: false, error: defaultError }
     }
 }
 
-
-export async function getProductById(productId: number) {
+export async function getProductById(productId: number): Promise<Result<Product>> {
     try {
         const response = await managementApi.get<Product>(`/product/${productId}`)
-
         return {
             isSuccess: true,
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
-        return {
-            isSuccess: false,
-            error: error.response?.data?.message || "Erro ao buscar produto por id",
+    } catch (error) {
+        const defaultError = "Erro ao buscar produto por id"
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message }
         }
+        return { isSuccess: false, error: defaultError }
     }
 }
 
@@ -60,11 +67,12 @@ export async function createProduct(product: Product): Promise<Result<Product>> 
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
-        return {
-            isSuccess: false,
-            error: error.response?.data?.message || "Erro ao criar produto",
+    } catch (error) {
+        const defaultError = "Erro ao criar produto"
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message }
         }
+        return { isSuccess: false, error: defaultError }
     }
 }
 
@@ -76,44 +84,28 @@ export async function updateProduct(productId: number, product: Product): Promis
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
-        return {
-            isSuccess: false,
-            error: error.response?.data?.message || "Erro ao criar produto",
+    } catch (error) {
+        const defaultError = "Erro ao atualizar produto"
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message }
         }
+        return { isSuccess: false, error: defaultError }
     }
 }
 
-export async function deleteProduct(productId: number) {
+export async function deleteProduct(productId: number): Promise<Result<void>> {
     try {
         const response = await managementApi.delete<void>(`/product/${productId}`)
-
         return {
             isSuccess: true,
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
-        return {
-            isSuccess: false,
-            error: error.response?.data?.message || "Erro ao deletar o produto",
+    } catch (error) {
+        const defaultError = "Erro ao deletar o produto"
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message }
         }
+        return { isSuccess: false, error: defaultError }
     }
 }
-
-
-// export async function getAllSupermarkets(): Promise<Result<Supermarket[]>> {
-//     try {
-//         const response = await managementApi.get<Supermarket[]>("/supermarket")
-//         return {
-//             isSuccess: true,
-//             value: response.data,
-//             error: "",
-//         }
-//     } catch (error: any) {
-//         return {
-//             isSuccess: false,
-//             error: error.response?.data?.message || "Erro ao buscar supermercados",
-//         }
-//     }
-// }

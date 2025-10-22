@@ -16,8 +16,7 @@ export interface User {
     supermercado: Supermarket
 }
 
-
-export async function getMe() {
+export async function getMe(): Promise<Result<User>> {
     try {
         const response = await managementApi.get<User>(`/user/me`)
 
@@ -29,7 +28,7 @@ export async function getMe() {
     } catch (error: any) {
         return {
             isSuccess: false,
-            value: null,
+            value: undefined, 
             error: error.response?.data?.message || "Erro ao buscar dados do usuário",
         }
     }
@@ -52,7 +51,7 @@ export async function getUsersBySupermarket(supermarketId: number): Promise<Resu
 }
 
 
-export async function getUserById(productId: number) {
+export async function getUserById(productId: number): Promise<Result<User>> { 
     try {
         const response = await managementApi.get<User>(`/user /${productId}`)
 
