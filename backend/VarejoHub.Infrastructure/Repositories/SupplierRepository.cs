@@ -23,7 +23,7 @@ public class SupplierRepository : Repository<Supplier>, ISupplierRepository
     public async Task<IEnumerable<Supplier>> SearchByNameAsync(string name, int supermarketId)
     {
         return await _dbSet
-            .Where(s => s.IdSupermercado == supermarketId && s.Equals(name))
+            .Where(s => s.IdSupermercado == supermarketId && s.NomeFantasia.Contains(name))
             .ToListAsync();
     }
 }

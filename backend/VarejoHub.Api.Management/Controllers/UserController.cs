@@ -42,7 +42,7 @@ namespace VarejoHub.Api.Management.Controllers
         }
 
 
-        [HttpGet("supermarket/{supermarketId}/  ")]
+        [HttpGet("supermarket/{supermarketId}")]
         public async Task<IActionResult> GetUsersBySupermarket(int supermarketId)
         {
             var users = await _userService.GetAllBySupermarketIdAsync(supermarketId);

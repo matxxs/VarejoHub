@@ -15,4 +15,5 @@ public interface IClientRepository
     Task<Client?> GetByCpfAsync(string cpf);
     Task<IEnumerable<Client>> GetClientsWithMinPointsAsync(int supermarketId, int minPoints);
     Task UpdateLoyaltyPointsAsync(int clientId, int pointsChange);
+    Task<IEnumerable<Client>> SearchByNameAsync(string name, int supermarketId);
 }
