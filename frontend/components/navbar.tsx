@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/src/auth/AuthProvider";
-import { getActivePlans, Plan as ApiPlan } from "@/src/api/management/plant";
+import { getActivePlans, Plan as ApiPlan } from "@/src/api/routes/plant";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -221,9 +221,9 @@ export function Navbar() {
         label: "Cadastros",
         icon: <Package className="h-4 w-4" />,
         items: [
-          { title: "Cadastrar Produtos", href: "/cadastros/produtos" },
-          { title: "Cadastrar Categorias", href: "/cadastros/categorias" },
-          { title: "Cadastrar Fornecedores", href: "/cadastros/fornecedores" },
+          { title: "Cadastrar Produtos", href: "/registrations/products" },
+          { title: "Cadastrar Categorias", href: "/registrations/categorias" },
+          { title: "Cadastrar Fornecedores", href: "/registrations/fornecedores" },
         ],
       });
     }
@@ -245,10 +245,10 @@ export function Navbar() {
         label: "Gestão",
         icon: <Users className="h-4 w-4" />,
         items: [
-          { title: "Gerenciar Usuários", href: "/gestao/usuarios" },
+          { title: "Gerenciar Usuários", href: "/management/users" },
           {
             title: "Configurações do Mercado",
-            href: "/gestao/configuracoes",
+            href: "/management/configuracoes",
           },
         ],
       });

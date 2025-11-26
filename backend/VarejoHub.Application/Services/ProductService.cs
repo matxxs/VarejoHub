@@ -21,7 +21,7 @@ public class ProductService : IProductService
     /// </summary>
     public async Task AddAsync(Product product)
     {
-        var signature = await _subscriptionRepository.GetBySupermarketIdAsync(product.IdSupermercado);
+        var signature = await _subscriptionRepository.GetBySupermarketIdWithPlanAsync(product.IdSupermercado);
 
         if (signature != null && signature.Plano.LimiteProdutos.HasValue)
         {

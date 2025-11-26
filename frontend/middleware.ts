@@ -16,13 +16,13 @@ interface JwtPayload {
 const ROLE_MAPS: Record<NivelAcesso, string[]> = {
     Administrador: [
         '/vendas',
-        '/cadastros',
+        '/registrations',
         '/financeiro',
-        '/gestao',
+        '/management',
     ],
     Gerente: [
         '/vendas', 
-        '/cadastros', 
+        '/registrations', 
         '/financeiro'
     ],
     Caixa: [
@@ -35,9 +35,9 @@ const ROLE_MAPS: Record<NivelAcesso, string[]> = {
 
 const SECURED_PREFIXES = [
     '/vendas',
-    '/cadastros',
+    '/registrations',
     '/financeiro',
-    '/gestao',
+    '/management',
 ];
 
 
