@@ -2,8 +2,8 @@
 
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react'; // <--- Adicionado useCallback
 import Cookies from 'js-cookie';
-import { Supermarket } from '../api/auth/auth-requests';
-import { User, getMe } from '../api/management/user';
+import { Supermarket } from '../api/routes/auth';
+import { User, getMe } from '../api/routes/user';
 
 const TOKEN_KEY = 'jwt_token';
 
