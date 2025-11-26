@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, Info, ArrowRight, Download, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getActivePlans, Plan as ApiPlan } from "@/src/api/management/plant"
+import { getActivePlans, Plan as ApiPlan } from "@/src/api/routes/plant"
 
 type Feature = {
   text: string;

@@ -36,10 +36,10 @@ export default function AuthCallbackPage() {
                 setErrorMessage("Falha ao verificar os dados do usuário. O token pode ser inválido ou ter expirado.");
             }
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Erro inesperado no AuthCallback:", error);
             setStatus("error");
-            setErrorMessage(error.message || "Erro ao processar autenticação. Tente novamente.");
+            setErrorMessage(error instanceof Error ? error.message : "Erro ao processar autenticação. Tente novamente.");
         }
     }, [login]); 
 

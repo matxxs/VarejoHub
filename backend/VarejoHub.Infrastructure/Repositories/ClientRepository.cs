@@ -36,4 +36,11 @@ public class ClientRepository : Repository<Client>, IClientRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<IEnumerable<Client>> SearchByNameAsync(string name, int supermarketId)
+    {
+        return await _dbSet
+            .Where(c => c.IdSupermercado == supermarketId && c.Nome.Contains(name))
+            .ToListAsync();
+    }
 }

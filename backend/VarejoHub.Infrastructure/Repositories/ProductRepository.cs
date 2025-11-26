@@ -32,7 +32,7 @@ public class ProductRepository : Repository<Product>, IProductRepository
     public async Task<IEnumerable<Product>> SearchByNameAsync(string name, int supermarketId)
     {
         return await _dbSet
-            .Where(p => p.IdSupermercado == supermarketId && p.Equals(name))
+            .Where(p => p.IdSupermercado == supermarketId && p.Nome.Contains(name))
             .ToListAsync();
     }
 }

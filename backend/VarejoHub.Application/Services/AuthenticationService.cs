@@ -185,7 +185,7 @@ public class AuthenticationService : IAuthenticationService
         var supermarketName = supermarket?.NomeFantasia ?? "Administrador Global";
         var status = supermarket?.Assinatura?.StatusAssinatura ?? "Global";
 
-        var magicLinkUrl = $"http://localhost:5054/api/auth/magic-login?token={token}&email={email}";
+        var magicLinkUrl = $"http://localhost:5189/api/auth/magic-login?token={token}&email={email}";
 
         var htmlContent = await GetTemplateContent("email-login-template.html");
 
@@ -207,7 +207,7 @@ public class AuthenticationService : IAuthenticationService
 
     private async Task SendRegistrationMagicLink(string email, string token)
     {
-        var magicLinkUrl = $"http://localhost:5054/api/auth/confirm-registration?token={token}&email={email}";
+        var magicLinkUrl = $"http://localhost:5189/api/auth/confirm-registration?token={token}&email={email}";
 
         var htmlContent = await GetTemplateContent("email-register-template.html");
 

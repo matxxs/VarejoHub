@@ -12,7 +12,7 @@ const getAuthToken = () => {
 
 // API de autenticação (pública por padrão)
 export const authApi = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_AUTH,
+    baseURL: process.env.NEXT_PUBLIC_API,
 });
 
 
@@ -50,12 +50,9 @@ const createAuthenticatedApi = (baseURL: string) => {
     return api;
 }
 
-export const managementApi = createAuthenticatedApi(process.env.NEXT_PUBLIC_API_MANAGEMENT!);
+export const privateApi = createAuthenticatedApi(process.env.NEXT_PUBLIC_API!);
 
 
-export const queryApi = createAuthenticatedApi(process.env.NEXT_PUBLIC_API_QUERY!);
-
-
-export const publicManagementApi = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_MANAGEMENT!,
+export const publicApi = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API!,
 });

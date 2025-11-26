@@ -3,11 +3,7 @@
     "Name": "Iniciar",
     "Projects": [
       {
-        "Path": "VarejoHub.Api.Auth\\VarejoHub.Api.Auth.csproj",
-        "Action": "StartWithoutDebugging"
-      },
-      {
-        "Path": "VarejoHub.Api.Management\\VarejoHub.Api.Management.csproj",
+        "Path": "VarejoHub.Api\\VarejoHub.Api.csproj",
         "Action": "Start"
       }
     ]

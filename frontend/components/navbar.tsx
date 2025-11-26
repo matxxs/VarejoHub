@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/src/auth/AuthProvider";
-import { getActivePlans, Plan as ApiPlan } from "@/src/api/management/plant";
+import { getActivePlans, Plan as ApiPlan } from "@/src/api/routes/plant";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
