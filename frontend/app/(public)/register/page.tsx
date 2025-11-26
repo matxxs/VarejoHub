@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
-import { RegisterRequest } from "@/src/api/routes/auth"
+import { RegisterRequest } from "@/src/api/auth/auth-requests"
 import { useRegisterMutation } from "@/src/hooks/queries/use-auth"
 
 

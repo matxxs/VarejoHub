@@ -1,10 +1,9 @@
 "use client"
 
-import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react'; // <--- Adicionado useCallback
 import Cookies from 'js-cookie';
-import { Supermarket } from '../api/routes/auth';
-import { User, getMe } from '../api/routes/users';
+import { Supermarket } from '../api/auth/auth-requests';
+import { User, getMe } from '../api/management/user';
 
 const TOKEN_KEY = 'jwt_token';
 
@@ -21,22 +20,22 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const router = useRouter();
     const [token, setToken] = useState<string | null>(null);
     const [userData, setUserData] = useState<User | null>(null);
     const [supermarketData, setSupermarketData] = useState<Supermarket | null>(null);
     const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
+    // Garante que loadUserData seja estável e não cause loops
     const loadUserData = useCallback(async (jwt: string): Promise<boolean> => {
         try {
             setToken(jwt);
 
-            const response = await getMe();
+            const response = await getMe(); // <--- Esta é a requisição
 
             if (response.isSuccess && response.value) {
                 const user = response.value;
                 setUserData(user);
-                setSupermarketData(user.supermercado || null);
+                setSupermarketData(user.supermercado);
                 console.log("Dados do usuário carregados com sucesso.");
                 return true;
             } else {
@@ -50,21 +49,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } finally {
             setIsAuthLoaded(true);
         }
-    }, []);
+    }, []); // Dependências vazias (setStates são estáveis)
 
+    // Garante que handleLogin seja estável (depende de loadUserData)
     const handleLogin = useCallback(async (jwt: string): Promise<boolean> => {
         Cookies.set(TOKEN_KEY, jwt, { expires: 7, secure: true, sameSite: 'Strict' });
         return await loadUserData(jwt);
-    }, [loadUserData]);
+    }, [loadUserData]); // Depende de loadUserData
 
+    // Garante que handleLogout seja estável
     const handleLogout = useCallback(() => {
         setToken(null);
         setUserData(null);
         setSupermarketData(null);
         Cookies.remove(TOKEN_KEY);
-        router.push('/'); // <-- 3. Adicionar o redirecionamento
-    }, [router]);
+    }, []); // Dependências vazias
 
+    // useEffect de inicialização. Usa a função loadUserData estável.
     useEffect(() => {
         const storedToken = Cookies.get(TOKEN_KEY);
 
@@ -73,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
             setIsAuthLoaded(true);
         }
-    }, [loadUserData]);
+    }, [loadUserData]); // <--- Depende de loadUserData
 
     const isAuthenticated = !!token && !!userData;
 
@@ -89,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 logout: handleLogout
             }}
         >
-            {isAuthLoaded ? children : null}
+            {isAuthLoaded ? children : null} 
         </AuthContext.Provider>
     );
 };

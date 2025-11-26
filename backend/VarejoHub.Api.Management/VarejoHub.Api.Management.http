@@ -1,0 +1,6 @@
+@VarejoHub.Api.Management_HostAddress = http://localhost:5164
+
+GET {{VarejoHub.Api.Management_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

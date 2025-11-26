@@ -28,7 +28,7 @@ namespace VarejoHub.Application.Services
                 int supermarketId = usuario.IdSupermercado.Value;
 
                 //signature
-                var signature = await _subscriptionRepository.GetBySupermarketIdWithPlanAsync(supermarketId);
+                var signature = await _subscriptionRepository.GetBySupermarketIdAsync(supermarketId);
 
                 if (signature != null && signature.Plano.LimiteUsuarios.HasValue)
                 {

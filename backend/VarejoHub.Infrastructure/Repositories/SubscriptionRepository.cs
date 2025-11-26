@@ -31,12 +31,4 @@ public class SubscriptionRepository : Repository<Subscription>, ISubscriptionRep
     {
         return await _dbSet.Where(w => w.IdPlano == planId).CountAsync();
     }
-
-    public async Task<Subscription?> GetBySupermarketIdWithPlanAsync(int supermarketId)
-    {
-        return await _context.Assinaturas
-                             .Include(s => s.Plano) 
-                             .AsNoTracking()
-                             .FirstOrDefaultAsync(s => s.IdSupermercado == supermarketId);
-    }
 }
