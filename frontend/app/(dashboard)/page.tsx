@@ -24,7 +24,7 @@ import {
   BarChart3,
   Star,
 } from "lucide-react";
-import { User } from "@/src/api/management/user";
+import { User } from "@/src/api/routes/user";
 import { useAuth } from "@/src/auth/AuthProvider";
 import {
   Accordion,
