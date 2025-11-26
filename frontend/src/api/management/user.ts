@@ -25,11 +25,11 @@ export async function getMe(): Promise<Result<User>> {
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         return {
             isSuccess: false,
             value: undefined, 
-            error: error.response?.data?.message || "Erro ao buscar dados do usuário",
+            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar dados do usuário",
         }
     }
 }
@@ -42,10 +42,10 @@ export async function getUsersBySupermarket(supermarketId: number): Promise<Resu
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         return {
             isSuccess: false,
-            error: error.response?.data?.message || "Erro ao buscar produtos",
+            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar usuários",
         }
     }
 }
@@ -60,10 +60,10 @@ export async function getUserById(productId: number): Promise<Result<User>> {
             value: response.data,
             error: "",
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         return {
             isSuccess: false,
-            error: error.response?.data?.message || "Erro ao buscar produto por id",
+            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar usuário por id",
         }
     }
 }

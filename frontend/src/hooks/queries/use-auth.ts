@@ -20,7 +20,7 @@ export const useMagicLinkMutation = (
             }
         },
 
-        onError: (error: Error) => {
+        onError: () => {
             setIsLoading(false);
             toast.error('Ocorreu um erro na conexão. Tente novamente.');
         },
