@@ -6,6 +6,12 @@ namespace VarejoHub.Application.Services
 {
     public class StockMovementService : IStockMovementService
     {
+        private const string ENTRADA = "entrada";
+        private const string SAIDA_VENDA = "saida_venda";
+        private const string PERDA = "perda";
+        private const string VENCIMENTO = "vencimento";
+        private const string AJUSTE = "ajuste";
+
         private readonly IStockMovementRepository _stockMovementRepository;
         private readonly IProductRepository _productRepository;
 
@@ -25,15 +31,15 @@ namespace VarejoHub.Application.Services
             {
                 switch (stockMovement.TipoMovimentacao.ToLower())
                 {
-                    case "entrada":
+                    case ENTRADA:
                         product.EstoqueAtual += stockMovement.Quantidade;
                         break;
-                    case "saida_venda":
-                    case "perda":
-                    case "vencimento":
+                    case SAIDA_VENDA:
+                    case PERDA:
+                    case VENCIMENTO:
                         product.EstoqueAtual -= stockMovement.Quantidade;
                         break;
-                    case "ajuste":
+                    case AJUSTE:
                         // Ajuste can be positive or negative
                         product.EstoqueAtual = stockMovement.Quantidade;
                         break;

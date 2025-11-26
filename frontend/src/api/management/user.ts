@@ -45,7 +45,7 @@ export async function getUsersBySupermarket(supermarketId: number): Promise<Resu
     } catch (error: unknown) {
         return {
             isSuccess: false,
-            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar usuários",
+            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar usuários do supermercado",
         }
     }
 }
