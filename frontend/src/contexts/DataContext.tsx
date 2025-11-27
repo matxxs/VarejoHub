@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { generateId, getFromStorage, saveToStorage } from './utils';
 
 // Types
 export interface Product {
@@ -74,32 +75,6 @@ export interface DataContextType {
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
-
-// Helper to generate IDs
-const generateId = (): string => {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
-};
-
-// Helper to safely parse localStorage
-const getFromStorage = <T,>(key: string, defaultValue: T[]): T[] => {
-  if (typeof window === 'undefined') return defaultValue;
-  try {
-    const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
-// Helper to save to localStorage
-const saveToStorage = <T,>(key: string, data: T[]): void => {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (error) {
-    console.error(`Error saving to localStorage: ${key}`, error);
-  }
-};
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
