@@ -20,47 +20,51 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useData, Supplier } from "@/src/contexts/DataContext";
+import { useData, Employee } from "@/src/contexts/DataContext";
 import { toast } from "sonner";
 
-export default function SuppliersPage() {
-  const { suppliers, addSupplier, updateSupplier, deleteSupplier } = useData();
+export default function EmployeesPage() {
+  const { employees, addEmployee, updateEmployee, deleteEmployee } = useData();
   
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
+  const [currentEmployee, setCurrentEmployee] = useState<Employee | null>(null);
   
   const [formData, setFormData] = useState({
-    tradeName: "",
-    cnpj: "",
+    name: "",
+    cpf: "",
     email: "",
     phone: "",
+    role: "",
   });
 
-  const filteredSuppliers = suppliers.filter(supplier =>
-    supplier.tradeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    supplier.cnpj?.includes(searchTerm) ||
-    supplier.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployees = employees.filter(employee =>
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.cpf?.includes(searchTerm) ||
+    employee.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.role?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const openNewDialog = () => {
-    setCurrentSupplier(null);
+    setCurrentEmployee(null);
     setFormData({
-      tradeName: "",
-      cnpj: "",
+      name: "",
+      cpf: "",
       email: "",
       phone: "",
+      role: "",
     });
     setIsDialogOpen(true);
   };
 
-  const openEditDialog = (supplier: Supplier) => {
-    setCurrentSupplier(supplier);
+  const openEditDialog = (employee: Employee) => {
+    setCurrentEmployee(employee);
     setFormData({
-      tradeName: supplier.tradeName,
-      cnpj: supplier.cnpj || "",
-      email: supplier.email || "",
-      phone: supplier.phone || "",
+      name: employee.name,
+      cpf: employee.cpf || "",
+      email: employee.email || "",
+      phone: employee.phone || "",
+      role: employee.role || "",
     });
     setIsDialogOpen(true);
   };
@@ -68,33 +72,34 @@ export default function SuppliersPage() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.tradeName.trim()) {
-      toast.error("Nome fantasia é obrigatório!");
+    if (!formData.name.trim()) {
+      toast.error("Nome é obrigatório!");
       return;
     }
 
-    const supplierData = {
-      tradeName: formData.tradeName.trim(),
-      cnpj: formData.cnpj.trim() || undefined,
+    const employeeData = {
+      name: formData.name.trim(),
+      cpf: formData.cpf.trim() || undefined,
       email: formData.email.trim() || undefined,
       phone: formData.phone.trim() || undefined,
+      role: formData.role.trim() || undefined,
     };
 
-    if (currentSupplier) {
-      updateSupplier(currentSupplier.id, supplierData);
-      toast.success("Fornecedor atualizado com sucesso!");
+    if (currentEmployee) {
+      updateEmployee(currentEmployee.id, employeeData);
+      toast.success("Funcionário atualizado com sucesso!");
     } else {
-      addSupplier(supplierData);
-      toast.success("Fornecedor cadastrado com sucesso!");
+      addEmployee(employeeData);
+      toast.success("Funcionário cadastrado com sucesso!");
     }
 
     setIsDialogOpen(false);
   };
 
-  const handleDelete = (supplier: Supplier) => {
-    if (confirm(`Tem certeza que deseja excluir o fornecedor "${supplier.tradeName}"?`)) {
-      deleteSupplier(supplier.id);
-      toast.success("Fornecedor removido com sucesso!");
+  const handleDelete = (employee: Employee) => {
+    if (confirm(`Tem certeza que deseja excluir o funcionário "${employee.name}"?`)) {
+      deleteEmployee(employee.id);
+      toast.success("Funcionário removido com sucesso!");
     }
   };
 
@@ -103,7 +108,7 @@ export default function SuppliersPage() {
       <div className="container mx-auto px-4 py-12 md:py-20">
         <div className="space-y-4 max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-foreground">
-            Fornecedores
+            Funcionários
           </h1>
         </div>
 
@@ -112,51 +117,53 @@ export default function SuppliersPage() {
             <div className="relative w-full max-w-sm">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, CNPJ ou email..."
+                placeholder="Buscar por nome, CPF, email ou cargo..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
               />
             </div>
             <Button onClick={openNewDialog}>
-              <Plus className="mr-2 h-4 w-4" /> Novo Fornecedor
+              <Plus className="mr-2 h-4 w-4" /> Novo Funcionário
             </Button>
           </div>
 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome Fantasia</TableHead>
-                <TableHead>CNPJ</TableHead>
+                <TableHead>Nome</TableHead>
+                <TableHead>CPF</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Telefone</TableHead>
+                <TableHead>Cargo</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredSuppliers.length === 0 ? (
+              {filteredEmployees.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
-                    Nenhum fornecedor encontrado.
+                  <TableCell colSpan={6} className="text-center h-24">
+                    Nenhum funcionário encontrado.
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredSuppliers.map((supplier) => (
-                  <TableRow key={supplier.id}>
-                    <TableCell className="font-medium">{supplier.tradeName}</TableCell>
-                    <TableCell>{supplier.cnpj || "-"}</TableCell>
-                    <TableCell>{supplier.email || "-"}</TableCell>
-                    <TableCell>{supplier.phone || "-"}</TableCell>
+                filteredEmployees.map((employee) => (
+                  <TableRow key={employee.id}>
+                    <TableCell className="font-medium">{employee.name}</TableCell>
+                    <TableCell>{employee.cpf || "-"}</TableCell>
+                    <TableCell>{employee.email || "-"}</TableCell>
+                    <TableCell>{employee.phone || "-"}</TableCell>
+                    <TableCell>{employee.role || "-"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(supplier)}>
+                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(employee)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
                           className="text-red-500 hover:text-red-600"
-                          onClick={() => handleDelete(supplier)}
+                          onClick={() => handleDelete(employee)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -171,27 +178,27 @@ export default function SuppliersPage() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>{currentSupplier ? "Editar Fornecedor" : "Novo Fornecedor"}</DialogTitle>
+                <DialogTitle>{currentEmployee ? "Editar Funcionário" : "Novo Funcionário"}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSave} className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="tradeName" className="text-right">Nome *</Label>
+                  <Label htmlFor="name" className="text-right">Nome *</Label>
                   <Input
-                    id="tradeName"
-                    value={formData.tradeName}
-                    onChange={(e) => setFormData({ ...formData, tradeName: e.target.value })}
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="col-span-3"
                     required
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="cnpj" className="text-right">CNPJ</Label>
+                  <Label htmlFor="cpf" className="text-right">CPF</Label>
                   <Input
-                    id="cnpj"
-                    value={formData.cnpj}
-                    onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+                    id="cpf"
+                    value={formData.cpf}
+                    onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
                     className="col-span-3"
-                    placeholder="00.000.000/0000-00"
+                    placeholder="000.000.000-00"
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -211,6 +218,16 @@ export default function SuppliersPage() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="role" className="text-right">Cargo</Label>
+                  <Input
+                    id="role"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    className="col-span-3"
+                    placeholder="ex: Caixa, Gerente, Estoquista"
                   />
                 </div>
                 <DialogFooter>
