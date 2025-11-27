@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Pencil, Trash2, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,116 +19,166 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useData, Product } from "@/src/contexts/DataContext";
 import { toast } from "sonner";
+import { useAuth } from "@/src/auth/AuthProvider";
+import { Product as ApiProduct, getProductsBySupermarket, createProduct, updateProduct, deleteProduct } from "@/src/api/routes/products";
 
 export default function ProductsPage() {
-    const { products, suppliers, addProduct, updateProduct, deleteProduct } = useData();
+    const { supermarketData } = useAuth();
+    const [products, setProducts] = useState<ApiProduct[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     
     const [searchTerm, setSearchTerm] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+    const [currentProduct, setCurrentProduct] = useState<ApiProduct | null>(null);
 
     const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        barcode: "",
-        price: "",
-        cost: "",
-        stock: "",
-        unit: "",
-        supplierId: "",
+        nome: "",
+        descricao: "",
+        codigoBarras: "",
+        preco: "",
+        quantidadeEstoque: "",
+        estoqueMinimo: "",
+        categoria: "",
     });
 
+    // Load products and suppliers on mount
+    useEffect(() => {
+        if (supermarketData?.idSupermercado) {
+            loadData();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [supermarketData?.idSupermercado]);
+
+    const loadData = async () => {
+        if (!supermarketData?.idSupermercado) return;
+        
+        setIsLoading(true);
+        try {
+            const productsResult = await getProductsBySupermarket(supermarketData.idSupermercado);
+            
+            if (productsResult.isSuccess && productsResult.value) {
+                setProducts(productsResult.value);
+            } else {
+                toast.error(productsResult.error || "Erro ao carregar produtos");
+            }
+        } catch {
+            toast.error("Erro ao carregar dados");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.barcode?.includes(searchTerm)
+        product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.codigoBarras?.includes(searchTerm)
     );
 
     const openNewDialog = () => {
         setCurrentProduct(null);
         setFormData({
-            name: "",
-            description: "",
-            barcode: "",
-            price: "",
-            cost: "",
-            stock: "",
-            unit: "",
-            supplierId: "",
+            nome: "",
+            descricao: "",
+            codigoBarras: "",
+            preco: "",
+            quantidadeEstoque: "",
+            estoqueMinimo: "",
+            categoria: "",
         });
         setIsDialogOpen(true);
     };
 
-    const openEditDialog = (product: Product) => {
+    const openEditDialog = (product: ApiProduct) => {
         setCurrentProduct(product);
         setFormData({
-            name: product.name,
-            description: product.description || "",
-            barcode: product.barcode || "",
-            price: product.price.toString(),
-            cost: product.cost?.toString() || "",
-            stock: product.stock.toString(),
-            unit: product.unit || "",
-            supplierId: product.supplierId || "",
+            nome: product.nome,
+            descricao: product.descricao || "",
+            codigoBarras: product.codigoBarras || "",
+            preco: product.preco.toString(),
+            quantidadeEstoque: product.quantidadeEstoque.toString(),
+            estoqueMinimo: product.estoqueMinimo?.toString() || "",
+            categoria: product.categoria || "",
         });
         setIsDialogOpen(true);
     };
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!formData.name.trim()) {
+        if (!formData.nome.trim()) {
             toast.error("Nome é obrigatório!");
             return;
         }
 
-        if (!formData.price || parseFloat(formData.price) <= 0) {
+        if (!formData.preco || parseFloat(formData.preco) <= 0) {
             toast.error("Preço deve ser maior que zero!");
             return;
         }
 
-        const productData = {
-            name: formData.name.trim(),
-            description: formData.description.trim() || undefined,
-            barcode: formData.barcode.trim() || undefined,
-            price: parseFloat(formData.price),
-            cost: formData.cost ? parseFloat(formData.cost) : undefined,
-            stock: parseInt(formData.stock) || 0,
-            unit: formData.unit.trim() || undefined,
-            supplierId: formData.supplierId === "none" ? undefined : formData.supplierId || undefined,
+        if (!supermarketData?.idSupermercado) {
+            toast.error("Erro: supermercado não identificado");
+            return;
+        }
+
+        setIsSaving(true);
+        
+        const productData: ApiProduct = {
+            idProduto: currentProduct?.idProduto,
+            nome: formData.nome.trim(),
+            descricao: formData.descricao.trim() || undefined,
+            codigoBarras: formData.codigoBarras.trim() || "",
+            preco: parseFloat(formData.preco),
+            quantidadeEstoque: parseInt(formData.quantidadeEstoque) || 0,
+            estoqueMinimo: parseInt(formData.estoqueMinimo) || 0,
+            categoria: formData.categoria.trim() || undefined,
+            idSupermercado: supermarketData.idSupermercado,
         };
 
-        if (currentProduct) {
-            updateProduct(currentProduct.id, productData);
-            toast.success("Produto atualizado com sucesso!");
-        } else {
-            addProduct(productData);
-            toast.success("Produto cadastrado com sucesso!");
+        try {
+            if (currentProduct?.idProduto) {
+                const result = await updateProduct(currentProduct.idProduto, productData);
+                if (result.isSuccess) {
+                    toast.success("Produto atualizado com sucesso!");
+                    setIsDialogOpen(false);
+                    loadData();
+                } else {
+                    toast.error(result.error || "Erro ao atualizar produto");
+                }
+            } else {
+                const result = await createProduct(productData);
+                if (result.isSuccess) {
+                    toast.success("Produto cadastrado com sucesso!");
+                    setIsDialogOpen(false);
+                    loadData();
+                } else {
+                    toast.error(result.error || "Erro ao cadastrar produto");
+                }
+            }
+        } catch {
+            toast.error("Erro ao salvar produto");
+        } finally {
+            setIsSaving(false);
         }
-
-        setIsDialogOpen(false);
     };
 
-    const handleDelete = (product: Product) => {
-        if (confirm(`Tem certeza que deseja excluir o produto "${product.name}"?`)) {
-            deleteProduct(product.id);
-            toast.success("Produto removido com sucesso!");
+    const handleDelete = async (product: ApiProduct) => {
+        if (!product.idProduto) return;
+        
+        if (confirm(`Tem certeza que deseja excluir o produto "${product.nome}"?`)) {
+            try {
+                const result = await deleteProduct(product.idProduto);
+                if (result.isSuccess) {
+                    toast.success("Produto removido com sucesso!");
+                    loadData();
+                } else {
+                    toast.error(result.error || "Erro ao remover produto");
+                }
+            } catch {
+                toast.error("Erro ao remover produto");
+            }
         }
-    };
-
-    const getSupplierName = (supplierId?: string) => {
-        if (!supplierId) return "-";
-        const supplier = suppliers.find(s => s.id === supplierId);
-        return supplier?.tradeName || "-";
     };
 
     const formatCurrency = (value: number) => {
@@ -165,14 +215,20 @@ export default function ProductsPage() {
                             <TableRow>
                                 <TableHead>Nome</TableHead>
                                 <TableHead>Código de Barras</TableHead>
-                                <TableHead>Fornecedor</TableHead>
+                                <TableHead>Categoria</TableHead>
                                 <TableHead className="text-right">Preço</TableHead>
                                 <TableHead className="text-right">Estoque</TableHead>
                                 <TableHead className="text-right">Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredProducts.length === 0 ? (
+                            {isLoading ? (
+                                <TableRow>
+                                    <TableCell colSpan={6} className="text-center h-24">
+                                        <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                                    </TableCell>
+                                </TableRow>
+                            ) : filteredProducts.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={6} className="text-center h-24">
                                         Nenhum produto encontrado.
@@ -180,14 +236,14 @@ export default function ProductsPage() {
                                 </TableRow>
                             ) : (
                                 filteredProducts.map((product) => (
-                                    <TableRow key={product.id}>
-                                        <TableCell className="font-medium">{product.name}</TableCell>
-                                        <TableCell>{product.barcode || "-"}</TableCell>
-                                        <TableCell>{getSupplierName(product.supplierId)}</TableCell>
+                                    <TableRow key={product.idProduto}>
+                                        <TableCell className="font-medium">{product.nome}</TableCell>
+                                        <TableCell>{product.codigoBarras || "-"}</TableCell>
+                                        <TableCell>{product.categoria || "-"}</TableCell>
                                         <TableCell className="text-right">
-                                            {formatCurrency(product.price)}
+                                            {formatCurrency(product.preco)}
                                         </TableCell>
-                                        <TableCell className="text-right">{product.stock}</TableCell>
+                                        <TableCell className="text-right">{product.quantidadeEstoque}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
                                                 <Button variant="ghost" size="icon" onClick={() => openEditDialog(product)}>
@@ -216,100 +272,85 @@ export default function ProductsPage() {
                             </DialogHeader>
                             <form onSubmit={handleSave} className="grid gap-4 py-4">
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="name" className="text-right">Nome *</Label>
+                                    <Label htmlFor="nome" className="text-right">Nome *</Label>
                                     <Input
-                                        id="name"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        id="nome"
+                                        value={formData.nome}
+                                        onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                                         className="col-span-3"
                                         required
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="description" className="text-right">Descrição</Label>
+                                    <Label htmlFor="descricao" className="text-right">Descrição</Label>
                                     <Input
-                                        id="description"
-                                        value={formData.description}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        id="descricao"
+                                        value={formData.descricao}
+                                        onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
                                         className="col-span-3"
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="barcode" className="text-right">Cód. Barras</Label>
+                                    <Label htmlFor="codigoBarras" className="text-right">Cód. Barras</Label>
                                     <Input
-                                        id="barcode"
-                                        value={formData.barcode}
-                                        onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
+                                        id="codigoBarras"
+                                        value={formData.codigoBarras}
+                                        onChange={(e) => setFormData({ ...formData, codigoBarras: e.target.value })}
                                         className="col-span-3"
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="supplier" className="text-right">Fornecedor</Label>
-                                    <Select value={formData.supplierId} onValueChange={(value) => setFormData({ ...formData, supplierId: value })}>
-                                        <SelectTrigger className="col-span-3">
-                                            <SelectValue placeholder="Selecione um fornecedor" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="none">Nenhum</SelectItem>
-                                            {suppliers.map((supplier) => (
-                                                <SelectItem key={supplier.id} value={supplier.id}>
-                                                    {supplier.tradeName}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Label htmlFor="categoria" className="text-right">Categoria</Label>
+                                    <Input
+                                        id="categoria"
+                                        value={formData.categoria}
+                                        onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
+                                        className="col-span-3"
+                                    />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="price" className="text-right">Preço *</Label>
+                                    <Label htmlFor="preco" className="text-right">Preço *</Label>
                                     <Input
-                                        id="price"
+                                        id="preco"
                                         type="number"
                                         step="0.01"
                                         min="0"
-                                        value={formData.price}
-                                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                                        value={formData.preco}
+                                        onChange={(e) => setFormData({ ...formData, preco: e.target.value })}
                                         className="col-span-3"
                                         required
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="cost" className="text-right">Custo</Label>
+                                    <Label htmlFor="quantidadeEstoque" className="text-right">Estoque</Label>
                                     <Input
-                                        id="cost"
+                                        id="quantidadeEstoque"
                                         type="number"
-                                        step="0.01"
                                         min="0"
-                                        value={formData.cost}
-                                        onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
+                                        value={formData.quantidadeEstoque}
+                                        onChange={(e) => setFormData({ ...formData, quantidadeEstoque: e.target.value })}
                                         className="col-span-3"
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="stock" className="text-right">Estoque</Label>
+                                    <Label htmlFor="estoqueMinimo" className="text-right">Estoque Mín.</Label>
                                     <Input
-                                        id="stock"
+                                        id="estoqueMinimo"
                                         type="number"
                                         min="0"
-                                        value={formData.stock}
-                                        onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                                        value={formData.estoqueMinimo}
+                                        onChange={(e) => setFormData({ ...formData, estoqueMinimo: e.target.value })}
                                         className="col-span-3"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="unit" className="text-right">Unidade</Label>
-                                    <Input
-                                        id="unit"
-                                        value={formData.unit}
-                                        onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                                        className="col-span-3"
-                                        placeholder="ex: UN, KG, L"
                                     />
                                 </div>
                                 <DialogFooter>
                                     <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                         Cancelar
                                     </Button>
-                                    <Button type="submit">Salvar</Button>
+                                    <Button type="submit" disabled={isSaving}>
+                                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                        Salvar
+                                    </Button>
                                 </DialogFooter>
                             </form>
                         </DialogContent>

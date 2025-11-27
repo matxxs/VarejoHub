@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Pencil, Trash2, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,26 +20,55 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useData, Client } from "@/src/contexts/DataContext";
 import { toast } from "sonner";
+import { useAuth } from "@/src/auth/AuthProvider";
+import { Client, getClientsBySupermarket, createClient, updateClient, deleteClient } from "@/src/api/routes/client";
 
 export default function ClientsPage() {
-  const { clients, addClient, updateClient, deleteClient } = useData();
+  const { supermarketData } = useAuth();
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentClient, setCurrentClient] = useState<Client | null>(null);
   
   const [formData, setFormData] = useState({
-    name: "",
+    nome: "",
     cpf: "",
     email: "",
-    phone: "",
-    loyaltyPoints: "0",
+    pontosFidelidade: "0",
   });
 
+  // Load clients on mount
+  useEffect(() => {
+    if (supermarketData?.idSupermercado) {
+      loadClients();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supermarketData?.idSupermercado]);
+
+  const loadClients = async () => {
+    if (!supermarketData?.idSupermercado) return;
+    
+    setIsLoading(true);
+    try {
+      const result = await getClientsBySupermarket(supermarketData.idSupermercado);
+      if (result.isSuccess && result.value) {
+        setClients(result.value);
+      } else {
+        toast.error(result.error || "Erro ao carregar clientes");
+      }
+    } catch {
+      toast.error("Erro ao carregar clientes");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.cpf?.includes(searchTerm) ||
     client.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -47,11 +76,10 @@ export default function ClientsPage() {
   const openNewDialog = () => {
     setCurrentClient(null);
     setFormData({
-      name: "",
+      nome: "",
       cpf: "",
       email: "",
-      phone: "",
-      loyaltyPoints: "0",
+      pontosFidelidade: "0",
     });
     setIsDialogOpen(true);
   };
@@ -59,46 +87,80 @@ export default function ClientsPage() {
   const openEditDialog = (client: Client) => {
     setCurrentClient(client);
     setFormData({
-      name: client.name,
+      nome: client.nome,
       cpf: client.cpf || "",
       email: client.email || "",
-      phone: client.phone || "",
-      loyaltyPoints: client.loyaltyPoints.toString(),
+      pontosFidelidade: client.pontosFidelidade.toString(),
     });
     setIsDialogOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim()) {
+    if (!formData.nome.trim()) {
       toast.error("Nome é obrigatório!");
       return;
     }
 
-    const clientData = {
-      name: formData.name.trim(),
-      cpf: formData.cpf.trim() || undefined,
-      email: formData.email.trim() || undefined,
-      phone: formData.phone.trim() || undefined,
-      loyaltyPoints: parseInt(formData.loyaltyPoints) || 0,
-    };
-
-    if (currentClient) {
-      updateClient(currentClient.id, clientData);
-      toast.success("Cliente atualizado com sucesso!");
-    } else {
-      addClient(clientData);
-      toast.success("Cliente cadastrado com sucesso!");
+    if (!supermarketData?.idSupermercado) {
+      toast.error("Erro: supermercado não identificado");
+      return;
     }
 
-    setIsDialogOpen(false);
+    setIsSaving(true);
+
+    const clientData = {
+      idCliente: currentClient?.idCliente || 0,
+      idSupermercado: supermarketData.idSupermercado,
+      nome: formData.nome.trim(),
+      cpf: formData.cpf.trim() || undefined,
+      email: formData.email.trim() || undefined,
+      pontosFidelidade: parseInt(formData.pontosFidelidade) || 0,
+    };
+
+    try {
+      if (currentClient?.idCliente) {
+        const result = await updateClient(currentClient.idCliente, clientData);
+        if (result.isSuccess) {
+          toast.success("Cliente atualizado com sucesso!");
+          setIsDialogOpen(false);
+          loadClients();
+        } else {
+          toast.error(result.error || "Erro ao atualizar cliente");
+        }
+      } else {
+        const result = await createClient(clientData);
+        if (result.isSuccess) {
+          toast.success("Cliente cadastrado com sucesso!");
+          setIsDialogOpen(false);
+          loadClients();
+        } else {
+          toast.error(result.error || "Erro ao cadastrar cliente");
+        }
+      }
+    } catch {
+      toast.error("Erro ao salvar cliente");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleDelete = (client: Client) => {
-    if (confirm(`Tem certeza que deseja excluir o cliente "${client.name}"?`)) {
-      deleteClient(client.id);
-      toast.success("Cliente removido com sucesso!");
+  const handleDelete = async (client: Client) => {
+    if (!client.idCliente) return;
+    
+    if (confirm(`Tem certeza que deseja excluir o cliente "${client.nome}"?`)) {
+      try {
+        const result = await deleteClient(client.idCliente);
+        if (result.isSuccess) {
+          toast.success("Cliente removido com sucesso!");
+          loadClients();
+        } else {
+          toast.error(result.error || "Erro ao remover cliente");
+        }
+      } catch {
+        toast.error("Erro ao remover cliente");
+      }
     }
   };
 
@@ -133,26 +195,30 @@ export default function ClientsPage() {
                 <TableHead>Nome</TableHead>
                 <TableHead>CPF</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Telefone</TableHead>
                 <TableHead className="text-right">Pontos</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredClients.length === 0 ? (
+              {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center h-24">
+                  <TableCell colSpan={5} className="text-center h-24">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  </TableCell>
+                </TableRow>
+              ) : filteredClients.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center h-24">
                     Nenhum cliente encontrado.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredClients.map((client) => (
-                  <TableRow key={client.id}>
-                    <TableCell className="font-medium">{client.name}</TableCell>
+                  <TableRow key={client.idCliente}>
+                    <TableCell className="font-medium">{client.nome}</TableCell>
                     <TableCell>{client.cpf || "-"}</TableCell>
                     <TableCell>{client.email || "-"}</TableCell>
-                    <TableCell>{client.phone || "-"}</TableCell>
-                    <TableCell className="text-right">{client.loyaltyPoints}</TableCell>
+                    <TableCell className="text-right">{client.pontosFidelidade}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="icon" onClick={() => openEditDialog(client)}>
@@ -181,11 +247,11 @@ export default function ClientsPage() {
               </DialogHeader>
               <form onSubmit={handleSave} className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">Nome *</Label>
+                  <Label htmlFor="nome" className="text-right">Nome *</Label>
                   <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    id="nome"
+                    value={formData.nome}
+                    onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                     className="col-span-3"
                     required
                   />
@@ -211,21 +277,12 @@ export default function ClientsPage() {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="phone" className="text-right">Telefone</Label>
+                  <Label htmlFor="pontosFidelidade" className="text-right">Pontos</Label>
                   <Input
-                    id="phone"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="points" className="text-right">Pontos</Label>
-                  <Input
-                    id="points"
+                    id="pontosFidelidade"
                     type="number"
-                    value={formData.loyaltyPoints}
-                    onChange={(e) => setFormData({ ...formData, loyaltyPoints: e.target.value })}
+                    value={formData.pontosFidelidade}
+                    onChange={(e) => setFormData({ ...formData, pontosFidelidade: e.target.value })}
                     className="col-span-3"
                   />
                 </div>
@@ -233,7 +290,10 @@ export default function ClientsPage() {
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button type="submit">Salvar</Button>
+                  <Button type="submit" disabled={isSaving}>
+                    {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Salvar
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>

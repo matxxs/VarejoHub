@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search, ChevronDown, ChevronUp, Calendar, User, Package } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, ChevronDown, ChevronUp, Calendar, User, Package, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,18 +13,49 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSales } from "@/src/contexts/SalesContext";
+import { toast } from "sonner";
+import { useAuth } from "@/src/auth/AuthProvider";
+import { Sale, getSalesBySupermarket, getSaleById } from "@/src/api/routes/sale";
 
 export default function SalesHistoryPage() {
-  const { sales } = useSales();
+  const { supermarketData } = useAuth();
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedSale, setExpandedSale] = useState<string | null>(null);
+  const [expandedSale, setExpandedSale] = useState<number | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState<number | null>(null);
+
+  // Load sales on mount
+  useEffect(() => {
+    if (supermarketData?.idSupermercado) {
+      loadSales();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supermarketData?.idSupermercado]);
+
+  const loadSales = async () => {
+    if (!supermarketData?.idSupermercado) return;
+    
+    setIsLoading(true);
+    try {
+      const result = await getSalesBySupermarket(supermarketData.idSupermercado);
+      if (result.isSuccess && result.value) {
+        setSales(result.value);
+      } else {
+        toast.error(result.error || "Erro ao carregar vendas");
+      }
+    } catch {
+      toast.error("Erro ao carregar vendas");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Filter sales based on search
   const filteredSales = sales.filter(sale =>
-    sale.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    sale.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    sale.items.some(item => item.productName.toLowerCase().includes(searchTerm.toLowerCase()))
+    sale.idVenda.toString().includes(searchTerm.toLowerCase()) ||
+    sale.cupomFiscalNumero?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sale.itens?.some(item => item.nomeProduto?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const formatCurrency = (value: number) => {
@@ -38,8 +69,31 @@ export default function SalesHistoryPage() {
     }).format(new Date(dateString));
   };
 
-  const toggleExpand = (saleId: string) => {
-    setExpandedSale(expandedSale === saleId ? null : saleId);
+  const toggleExpand = async (saleId: number) => {
+    if (expandedSale === saleId) {
+      setExpandedSale(null);
+      return;
+    }
+
+    // If sale doesn't have items loaded, fetch them
+    const sale = sales.find(s => s.idVenda === saleId);
+    if (sale && !sale.itens) {
+      setLoadingDetails(saleId);
+      try {
+        const result = await getSaleById(saleId);
+        if (result.isSuccess && result.value) {
+          setSales(prev => prev.map(s => 
+            s.idVenda === saleId ? { ...s, itens: result.value?.itens } : s
+          ));
+        }
+      } catch {
+        toast.error("Erro ao carregar detalhes da venda");
+      } finally {
+        setLoadingDetails(null);
+      }
+    }
+    
+    setExpandedSale(saleId);
   };
 
   return (
@@ -55,7 +109,7 @@ export default function SalesHistoryPage() {
               <div className="relative w-full max-w-sm">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar por ID, cliente ou produto..."
+                  placeholder="Buscar por ID, cupom ou produto..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -78,15 +132,20 @@ export default function SalesHistoryPage() {
                       <TableHead>ID</TableHead>
                       <TableHead>Data/Hora</TableHead>
                       <TableHead>Cliente</TableHead>
-                      <TableHead>Operador</TableHead>
-                      <TableHead className="text-right">Itens</TableHead>
+                      <TableHead>Cupom Fiscal</TableHead>
                       <TableHead className="text-right">Total</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredSales.length === 0 ? (
+                    {isLoading ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center h-24">
+                        <TableCell colSpan={6} className="text-center h-24">
+                          <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredSales.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center h-24">
                           Nenhuma venda encontrada.
                         </TableCell>
                       </TableRow>
@@ -94,70 +153,75 @@ export default function SalesHistoryPage() {
                       filteredSales.map((sale) => (
                         <>
                           <TableRow
-                            key={sale.id}
+                            key={sale.idVenda}
                             className="cursor-pointer hover:bg-muted/50"
-                            onClick={() => toggleExpand(sale.id)}
+                            onClick={() => toggleExpand(sale.idVenda)}
                           >
                             <TableCell>
                               <Button variant="ghost" size="icon" className="h-6 w-6">
-                                {expandedSale === sale.id ? (
+                                {loadingDetails === sale.idVenda ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : expandedSale === sale.idVenda ? (
                                   <ChevronUp className="h-4 w-4" />
                                 ) : (
                                   <ChevronDown className="h-4 w-4" />
                                 )}
                               </Button>
                             </TableCell>
-                            <TableCell className="font-mono text-xs">{sale.id}</TableCell>
+                            <TableCell className="font-mono text-xs">#{sale.idVenda}</TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                                {formatDateTime(sale.dateTime)}
+                                {formatDateTime(sale.dataHora)}
                               </div>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-muted-foreground" />
-                                {sale.clientName || "Consumidor Final"}
+                                {sale.idCliente ? `Cliente #${sale.idCliente}` : "Consumidor Final"}
                               </div>
                             </TableCell>
-                            <TableCell>{sale.operatorName || "-"}</TableCell>
-                            <TableCell className="text-right">{sale.items.length}</TableCell>
+                            <TableCell>{sale.cupomFiscalNumero || "-"}</TableCell>
                             <TableCell className="text-right font-semibold">
-                              {formatCurrency(sale.total)}
+                              {formatCurrency(sale.valorTotal)}
                             </TableCell>
                           </TableRow>
-                          {expandedSale === sale.id && (
-                            <TableRow key={`${sale.id}-details`}>
-                              <TableCell colSpan={7} className="bg-muted/30">
+                          {expandedSale === sale.idVenda && (
+                            <TableRow key={`${sale.idVenda}-details`}>
+                              <TableCell colSpan={6} className="bg-muted/30">
                                 <div className="p-4">
                                   <h4 className="font-semibold mb-3 flex items-center gap-2">
                                     <Package className="h-4 w-4" />
                                     Itens da Venda
                                   </h4>
-                                  <Table>
-                                    <TableHeader>
-                                      <TableRow>
-                                        <TableHead>Produto</TableHead>
-                                        <TableHead className="text-right">Qtd</TableHead>
-                                        <TableHead className="text-right">Preço Unit.</TableHead>
-                                        <TableHead className="text-right">Subtotal</TableHead>
-                                      </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                      {sale.items.map((item, index) => (
-                                        <TableRow key={index}>
-                                          <TableCell>{item.productName}</TableCell>
-                                          <TableCell className="text-right">{item.quantity}</TableCell>
-                                          <TableCell className="text-right">
-                                            {formatCurrency(item.unitPrice)}
-                                          </TableCell>
-                                          <TableCell className="text-right">
-                                            {formatCurrency(item.subtotal)}
-                                          </TableCell>
+                                  {sale.itens && sale.itens.length > 0 ? (
+                                    <Table>
+                                      <TableHeader>
+                                        <TableRow>
+                                          <TableHead>Produto</TableHead>
+                                          <TableHead className="text-right">Qtd</TableHead>
+                                          <TableHead className="text-right">Preço Unit.</TableHead>
+                                          <TableHead className="text-right">Subtotal</TableHead>
                                         </TableRow>
-                                      ))}
-                                    </TableBody>
-                                  </Table>
+                                      </TableHeader>
+                                      <TableBody>
+                                        {sale.itens.map((item, index) => (
+                                          <TableRow key={index}>
+                                            <TableCell>{item.nomeProduto || `Produto #${item.idProduto}`}</TableCell>
+                                            <TableCell className="text-right">{item.quantidade}</TableCell>
+                                            <TableCell className="text-right">
+                                              {formatCurrency(item.precoUnitario)}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                              {formatCurrency(item.subtotal)}
+                                            </TableCell>
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  ) : (
+                                    <p className="text-muted-foreground">Nenhum item encontrado.</p>
+                                  )}
                                 </div>
                               </TableCell>
                             </TableRow>

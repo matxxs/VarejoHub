@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search, Plus, Minus, Trash2, ShoppingCart, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Plus, Minus, Trash2, ShoppingCart, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,30 +28,132 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useData } from "@/src/contexts/DataContext";
-import { useSales } from "@/src/contexts/SalesContext";
 import { toast } from "sonner";
+import { useAuth } from "@/src/auth/AuthProvider";
+import { Product, getProductsBySupermarket } from "@/src/api/routes/products";
+import { Client, getClientsBySupermarket } from "@/src/api/routes/client";
+import { Sale, SaleItem, createSale } from "@/src/api/routes/sale";
+
+// Cart item for local state
+interface CartItem {
+  productId: number;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
 
 export default function PDVPage() {
-  const { products, clients } = useData();
-  const { cart, addToCart, updateQuantity, removeFromCart, clearCart, checkout, cartTotal } = useSales();
+  const { supermarketData, userData } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [isCheckoutDialogOpen, setIsCheckoutDialogOpen] = useState(false);
 
+  // Calculate cart total
+  const cartTotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
+
+  // Load products and clients on mount
+  useEffect(() => {
+    if (supermarketData?.idSupermercado) {
+      loadData();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supermarketData?.idSupermercado]);
+
+  const loadData = async () => {
+    if (!supermarketData?.idSupermercado) return;
+    
+    setIsLoading(true);
+    try {
+      const [productsResult, clientsResult] = await Promise.all([
+        getProductsBySupermarket(supermarketData.idSupermercado),
+        getClientsBySupermarket(supermarketData.idSupermercado)
+      ]);
+      
+      if (productsResult.isSuccess && productsResult.value) {
+        setProducts(productsResult.value);
+      } else {
+        toast.error(productsResult.error || "Erro ao carregar produtos");
+      }
+      
+      if (clientsResult.isSuccess && clientsResult.value) {
+        setClients(clientsResult.value);
+      }
+    } catch {
+      toast.error("Erro ao carregar dados");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Filter products based on search
   const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.barcode?.includes(searchTerm)
+    product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.codigoBarras?.includes(searchTerm)
   );
 
-  const handleAddToCart = (productId: string) => {
-    const product = products.find(p => p.id === productId);
-    if (product) {
-      addToCart(product, 1);
-      toast.success(`${product.name} adicionado ao carrinho`);
+  const addToCart = (product: Product) => {
+    if (!product.idProduto) return;
+    
+    setCart(prev => {
+      const existingIndex = prev.findIndex(item => item.productId === product.idProduto);
+      
+      if (existingIndex >= 0) {
+        const updated = [...prev];
+        const newQty = updated[existingIndex].quantity + 1;
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: newQty,
+          subtotal: newQty * updated[existingIndex].unitPrice,
+        };
+        return updated;
+      }
+      
+      const newItem: CartItem = {
+        productId: product.idProduto,
+        productName: product.nome,
+        quantity: 1,
+        unitPrice: product.preco,
+        subtotal: product.preco,
+      };
+      return [...prev, newItem];
+    });
+    
+    toast.success(`${product.nome} adicionado ao carrinho`);
+  };
+
+  const updateQuantity = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      setCart(prev => prev.filter(item => item.productId !== productId));
+      return;
     }
+    
+    setCart(prev => {
+      const index = prev.findIndex(item => item.productId === productId);
+      if (index === -1) return prev;
+      
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        quantity,
+        subtotal: quantity * updated[index].unitPrice,
+      };
+      return updated;
+    });
+  };
+
+  const removeFromCart = (productId: number) => {
+    setCart(prev => prev.filter(item => item.productId !== productId));
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   const handleCheckout = () => {
@@ -62,15 +164,48 @@ export default function PDVPage() {
     setIsCheckoutDialogOpen(true);
   };
 
-  const handleConfirmCheckout = () => {
-    const clientId = selectedClient === "none" ? undefined : selectedClient || undefined;
-    const sale = checkout(clientId, undefined);
-    if (sale) {
-      toast.success(`Venda finalizada! ID: ${sale.id} - Total: ${formatCurrency(sale.total)}`);
-      setSelectedClient("");
-      setIsCheckoutDialogOpen(false);
-    } else {
-      toast.error("Erro ao finalizar venda.");
+  const handleConfirmCheckout = async () => {
+    if (!supermarketData?.idSupermercado) {
+      toast.error("Erro: supermercado não identificado");
+      return;
+    }
+
+    setIsCheckingOut(true);
+
+    const clientId = selectedClient && selectedClient !== "none" ? parseInt(selectedClient) : undefined;
+
+    const saleData: Omit<Sale, 'idVenda'> = {
+      idSupermercado: supermarketData.idSupermercado,
+      idUsuarioCaixa: userData?.idUsuario,
+      idCliente: clientId,
+      dataHora: new Date().toISOString(),
+      valorTotal: cartTotal,
+      itens: cart.map(item => ({
+        idItemVenda: 0,
+        idVenda: 0,
+        idProduto: item.productId,
+        quantidade: item.quantity,
+        precoUnitario: item.unitPrice,
+        subtotal: item.subtotal,
+        nomeProduto: item.productName,
+      } as SaleItem)),
+    };
+
+    try {
+      const result = await createSale(saleData);
+      if (result.isSuccess && result.value) {
+        toast.success(`Venda finalizada! ID: ${result.value.idVenda} - Total: ${formatCurrency(cartTotal)}`);
+        setSelectedClient("");
+        setIsCheckoutDialogOpen(false);
+        setCart([]);
+        loadData(); // Reload products to update stock
+      } else {
+        toast.error(result.error || "Erro ao finalizar venda");
+      }
+    } catch {
+      toast.error("Erro ao finalizar venda");
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 
@@ -115,7 +250,13 @@ export default function PDVPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {filteredProducts.length === 0 ? (
+                        {isLoading ? (
+                          <TableRow>
+                            <TableCell colSpan={4} className="text-center h-24">
+                              <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                            </TableCell>
+                          </TableRow>
+                        ) : filteredProducts.length === 0 ? (
                           <TableRow>
                             <TableCell colSpan={4} className="text-center h-24">
                               Nenhum produto encontrado.
@@ -123,17 +264,17 @@ export default function PDVPage() {
                           </TableRow>
                         ) : (
                           filteredProducts.map((product) => (
-                            <TableRow key={product.id}>
-                              <TableCell className="font-medium">{product.name}</TableCell>
+                            <TableRow key={product.idProduto}>
+                              <TableCell className="font-medium">{product.nome}</TableCell>
                               <TableCell className="text-right">
-                                {formatCurrency(product.price)}
+                                {formatCurrency(product.preco)}
                               </TableCell>
-                              <TableCell className="text-right">{product.stock}</TableCell>
+                              <TableCell className="text-right">{product.quantidadeEstoque}</TableCell>
                               <TableCell className="text-right">
                                 <Button
                                   size="sm"
-                                  onClick={() => handleAddToCart(product.id)}
-                                  disabled={product.stock <= 0}
+                                  onClick={() => addToCart(product)}
+                                  disabled={product.quantidadeEstoque <= 0}
                                 >
                                   <Plus className="h-4 w-4 mr-1" />
                                   Adicionar
@@ -244,8 +385,8 @@ export default function PDVPage() {
                 <SelectContent>
                   <SelectItem value="none">Consumidor Final</SelectItem>
                   {clients.map((client) => (
-                    <SelectItem key={client.id} value={client.id}>
-                      {client.name}
+                    <SelectItem key={client.idCliente} value={client.idCliente.toString()}>
+                      {client.nome}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -265,7 +406,8 @@ export default function PDVPage() {
             <Button variant="outline" onClick={() => setIsCheckoutDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleConfirmCheckout}>
+            <Button onClick={handleConfirmCheckout} disabled={isCheckingOut}>
+              {isCheckingOut && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirmar Venda
             </Button>
           </DialogFooter>

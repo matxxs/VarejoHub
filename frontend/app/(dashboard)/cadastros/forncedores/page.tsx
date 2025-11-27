@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Pencil, Trash2, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,25 +20,55 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useData, Supplier } from "@/src/contexts/DataContext";
 import { toast } from "sonner";
+import { useAuth } from "@/src/auth/AuthProvider";
+import { Supplier, getSuppliersBySupermarket, createSupplier, updateSupplier, deleteSupplier } from "@/src/api/routes/supplier";
 
 export default function SuppliersPage() {
-  const { suppliers, addSupplier, updateSupplier, deleteSupplier } = useData();
+  const { supermarketData } = useAuth();
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
   
   const [formData, setFormData] = useState({
-    tradeName: "",
+    nomeFantasia: "",
     cnpj: "",
     email: "",
-    phone: "",
+    telefone: "",
   });
 
+  // Load suppliers on mount
+  useEffect(() => {
+    if (supermarketData?.idSupermercado) {
+      loadSuppliers();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supermarketData?.idSupermercado]);
+
+  const loadSuppliers = async () => {
+    if (!supermarketData?.idSupermercado) return;
+    
+    setIsLoading(true);
+    try {
+      const result = await getSuppliersBySupermarket(supermarketData.idSupermercado);
+      if (result.isSuccess && result.value) {
+        setSuppliers(result.value);
+      } else {
+        toast.error(result.error || "Erro ao carregar fornecedores");
+      }
+    } catch {
+      toast.error("Erro ao carregar fornecedores");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const filteredSuppliers = suppliers.filter(supplier =>
-    supplier.tradeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.nomeFantasia.toLowerCase().includes(searchTerm.toLowerCase()) ||
     supplier.cnpj?.includes(searchTerm) ||
     supplier.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -46,10 +76,10 @@ export default function SuppliersPage() {
   const openNewDialog = () => {
     setCurrentSupplier(null);
     setFormData({
-      tradeName: "",
+      nomeFantasia: "",
       cnpj: "",
       email: "",
-      phone: "",
+      telefone: "",
     });
     setIsDialogOpen(true);
   };
@@ -57,44 +87,80 @@ export default function SuppliersPage() {
   const openEditDialog = (supplier: Supplier) => {
     setCurrentSupplier(supplier);
     setFormData({
-      tradeName: supplier.tradeName,
+      nomeFantasia: supplier.nomeFantasia,
       cnpj: supplier.cnpj || "",
       email: supplier.email || "",
-      phone: supplier.phone || "",
+      telefone: supplier.telefone || "",
     });
     setIsDialogOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.tradeName.trim()) {
+    if (!formData.nomeFantasia.trim()) {
       toast.error("Nome fantasia é obrigatório!");
       return;
     }
 
-    const supplierData = {
-      tradeName: formData.tradeName.trim(),
-      cnpj: formData.cnpj.trim() || undefined,
-      email: formData.email.trim() || undefined,
-      phone: formData.phone.trim() || undefined,
-    };
-
-    if (currentSupplier) {
-      updateSupplier(currentSupplier.id, supplierData);
-      toast.success("Fornecedor atualizado com sucesso!");
-    } else {
-      addSupplier(supplierData);
-      toast.success("Fornecedor cadastrado com sucesso!");
+    if (!supermarketData?.idSupermercado) {
+      toast.error("Erro: supermercado não identificado");
+      return;
     }
 
-    setIsDialogOpen(false);
+    setIsSaving(true);
+
+    const supplierData = {
+      idFornecedor: currentSupplier?.idFornecedor || 0,
+      idSupermercado: supermarketData.idSupermercado,
+      nomeFantasia: formData.nomeFantasia.trim(),
+      cnpj: formData.cnpj.trim() || undefined,
+      email: formData.email.trim() || undefined,
+      telefone: formData.telefone.trim() || undefined,
+    };
+
+    try {
+      if (currentSupplier?.idFornecedor) {
+        const result = await updateSupplier(currentSupplier.idFornecedor, supplierData);
+        if (result.isSuccess) {
+          toast.success("Fornecedor atualizado com sucesso!");
+          setIsDialogOpen(false);
+          loadSuppliers();
+        } else {
+          toast.error(result.error || "Erro ao atualizar fornecedor");
+        }
+      } else {
+        const result = await createSupplier(supplierData);
+        if (result.isSuccess) {
+          toast.success("Fornecedor cadastrado com sucesso!");
+          setIsDialogOpen(false);
+          loadSuppliers();
+        } else {
+          toast.error(result.error || "Erro ao cadastrar fornecedor");
+        }
+      }
+    } catch {
+      toast.error("Erro ao salvar fornecedor");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleDelete = (supplier: Supplier) => {
-    if (confirm(`Tem certeza que deseja excluir o fornecedor "${supplier.tradeName}"?`)) {
-      deleteSupplier(supplier.id);
-      toast.success("Fornecedor removido com sucesso!");
+  const handleDelete = async (supplier: Supplier) => {
+    if (!supplier.idFornecedor) return;
+    
+    if (confirm(`Tem certeza que deseja excluir o fornecedor "${supplier.nomeFantasia}"?`)) {
+      try {
+        const result = await deleteSupplier(supplier.idFornecedor);
+        if (result.isSuccess) {
+          toast.success("Fornecedor removido com sucesso!");
+          loadSuppliers();
+        } else {
+          toast.error(result.error || "Erro ao remover fornecedor");
+        }
+      } catch {
+        toast.error("Erro ao remover fornecedor");
+      }
     }
   };
 
@@ -134,7 +200,13 @@ export default function SuppliersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredSuppliers.length === 0 ? (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center h-24">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  </TableCell>
+                </TableRow>
+              ) : filteredSuppliers.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center h-24">
                     Nenhum fornecedor encontrado.
@@ -142,11 +214,11 @@ export default function SuppliersPage() {
                 </TableRow>
               ) : (
                 filteredSuppliers.map((supplier) => (
-                  <TableRow key={supplier.id}>
-                    <TableCell className="font-medium">{supplier.tradeName}</TableCell>
+                  <TableRow key={supplier.idFornecedor}>
+                    <TableCell className="font-medium">{supplier.nomeFantasia}</TableCell>
                     <TableCell>{supplier.cnpj || "-"}</TableCell>
                     <TableCell>{supplier.email || "-"}</TableCell>
-                    <TableCell>{supplier.phone || "-"}</TableCell>
+                    <TableCell>{supplier.telefone || "-"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="icon" onClick={() => openEditDialog(supplier)}>
@@ -175,11 +247,11 @@ export default function SuppliersPage() {
               </DialogHeader>
               <form onSubmit={handleSave} className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="tradeName" className="text-right">Nome *</Label>
+                  <Label htmlFor="nomeFantasia" className="text-right">Nome *</Label>
                   <Input
-                    id="tradeName"
-                    value={formData.tradeName}
-                    onChange={(e) => setFormData({ ...formData, tradeName: e.target.value })}
+                    id="nomeFantasia"
+                    value={formData.nomeFantasia}
+                    onChange={(e) => setFormData({ ...formData, nomeFantasia: e.target.value })}
                     className="col-span-3"
                     required
                   />
@@ -205,11 +277,11 @@ export default function SuppliersPage() {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="phone" className="text-right">Telefone</Label>
+                  <Label htmlFor="telefone" className="text-right">Telefone</Label>
                   <Input
-                    id="phone"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    id="telefone"
+                    value={formData.telefone}
+                    onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
                     className="col-span-3"
                   />
                 </div>
@@ -217,7 +289,10 @@ export default function SuppliersPage() {
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button type="submit">Salvar</Button>
+                  <Button type="submit" disabled={isSaving}>
+                    {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Salvar
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>

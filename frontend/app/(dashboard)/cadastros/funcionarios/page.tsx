@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Pencil, Trash2, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,40 +19,72 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useData, Employee } from "@/src/contexts/DataContext";
 import { toast } from "sonner";
+import { useAuth } from "@/src/auth/AuthProvider";
+import { Employee, getEmployeesBySupermarket, createEmployee, updateEmployee, deleteEmployee } from "@/src/api/routes/employee";
 
 export default function EmployeesPage() {
-  const { employees, addEmployee, updateEmployee, deleteEmployee } = useData();
+  const { supermarketData } = useAuth();
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentEmployee, setCurrentEmployee] = useState<Employee | null>(null);
   
   const [formData, setFormData] = useState({
-    name: "",
-    cpf: "",
+    nome: "",
     email: "",
-    phone: "",
-    role: "",
+    nivelAcesso: "Caixa" as Employee['nivelAcesso'],
   });
 
+  // Load employees on mount
+  useEffect(() => {
+    if (supermarketData?.idSupermercado) {
+      loadEmployees();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supermarketData?.idSupermercado]);
+
+  const loadEmployees = async () => {
+    if (!supermarketData?.idSupermercado) return;
+    
+    setIsLoading(true);
+    try {
+      const result = await getEmployeesBySupermarket(supermarketData.idSupermercado);
+      if (result.isSuccess && result.value) {
+        setEmployees(result.value);
+      } else {
+        toast.error(result.error || "Erro ao carregar funcionários");
+      }
+    } catch {
+      toast.error("Erro ao carregar funcionários");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.cpf?.includes(searchTerm) ||
+    employee.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
     employee.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.role?.toLowerCase().includes(searchTerm.toLowerCase())
+    employee.nivelAcesso?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const openNewDialog = () => {
     setCurrentEmployee(null);
     setFormData({
-      name: "",
-      cpf: "",
+      nome: "",
       email: "",
-      phone: "",
-      role: "",
+      nivelAcesso: "Caixa",
     });
     setIsDialogOpen(true);
   };
@@ -60,47 +92,94 @@ export default function EmployeesPage() {
   const openEditDialog = (employee: Employee) => {
     setCurrentEmployee(employee);
     setFormData({
-      name: employee.name,
-      cpf: employee.cpf || "",
+      nome: employee.nome,
       email: employee.email || "",
-      phone: employee.phone || "",
-      role: employee.role || "",
+      nivelAcesso: employee.nivelAcesso,
     });
     setIsDialogOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim()) {
+    if (!formData.nome.trim()) {
       toast.error("Nome é obrigatório!");
       return;
     }
 
+    if (!formData.email.trim()) {
+      toast.error("Email é obrigatório!");
+      return;
+    }
+
+    if (!supermarketData?.idSupermercado) {
+      toast.error("Erro: supermercado não identificado");
+      return;
+    }
+
+    setIsSaving(true);
+
     const employeeData = {
-      name: formData.name.trim(),
-      cpf: formData.cpf.trim() || undefined,
-      email: formData.email.trim() || undefined,
-      phone: formData.phone.trim() || undefined,
-      role: formData.role.trim() || undefined,
+      idUsuario: currentEmployee?.idUsuario || 0,
+      idSupermercado: supermarketData.idSupermercado,
+      nome: formData.nome.trim(),
+      email: formData.email.trim(),
+      nivelAcesso: formData.nivelAcesso,
     };
 
-    if (currentEmployee) {
-      updateEmployee(currentEmployee.id, employeeData);
-      toast.success("Funcionário atualizado com sucesso!");
-    } else {
-      addEmployee(employeeData);
-      toast.success("Funcionário cadastrado com sucesso!");
+    try {
+      if (currentEmployee?.idUsuario) {
+        const result = await updateEmployee(currentEmployee.idUsuario, employeeData);
+        if (result.isSuccess) {
+          toast.success("Funcionário atualizado com sucesso!");
+          setIsDialogOpen(false);
+          loadEmployees();
+        } else {
+          toast.error(result.error || "Erro ao atualizar funcionário");
+        }
+      } else {
+        const result = await createEmployee(employeeData);
+        if (result.isSuccess) {
+          toast.success("Funcionário cadastrado com sucesso!");
+          setIsDialogOpen(false);
+          loadEmployees();
+        } else {
+          toast.error(result.error || "Erro ao cadastrar funcionário");
+        }
+      }
+    } catch {
+      toast.error("Erro ao salvar funcionário");
+    } finally {
+      setIsSaving(false);
     }
-
-    setIsDialogOpen(false);
   };
 
-  const handleDelete = (employee: Employee) => {
-    if (confirm(`Tem certeza que deseja excluir o funcionário "${employee.name}"?`)) {
-      deleteEmployee(employee.id);
-      toast.success("Funcionário removido com sucesso!");
+  const handleDelete = async (employee: Employee) => {
+    if (!employee.idUsuario) return;
+    
+    if (confirm(`Tem certeza que deseja excluir o funcionário "${employee.nome}"?`)) {
+      try {
+        const result = await deleteEmployee(employee.idUsuario);
+        if (result.isSuccess) {
+          toast.success("Funcionário removido com sucesso!");
+          loadEmployees();
+        } else {
+          toast.error(result.error || "Erro ao remover funcionário");
+        }
+      } catch {
+        toast.error("Erro ao remover funcionário");
+      }
     }
+  };
+
+  const getNivelAcessoLabel = (nivel: string) => {
+    const labels: Record<string, string> = {
+      'Administrador': 'Administrador',
+      'Gerente': 'Gerente',
+      'Caixa': 'Caixa',
+      'Financeiro': 'Financeiro',
+    };
+    return labels[nivel] || nivel;
   };
 
   return (
@@ -117,7 +196,7 @@ export default function EmployeesPage() {
             <div className="relative w-full max-w-sm">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, CPF, email ou cargo..."
+                placeholder="Buscar por nome, email ou cargo..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
@@ -132,28 +211,30 @@ export default function EmployeesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead>CPF</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead>Cargo</TableHead>
+                <TableHead>Nível de Acesso</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredEmployees.length === 0 ? (
+              {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center h-24">
+                  <TableCell colSpan={4} className="text-center h-24">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  </TableCell>
+                </TableRow>
+              ) : filteredEmployees.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center h-24">
                     Nenhum funcionário encontrado.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredEmployees.map((employee) => (
-                  <TableRow key={employee.id}>
-                    <TableCell className="font-medium">{employee.name}</TableCell>
-                    <TableCell>{employee.cpf || "-"}</TableCell>
+                  <TableRow key={employee.idUsuario}>
+                    <TableCell className="font-medium">{employee.nome}</TableCell>
                     <TableCell>{employee.email || "-"}</TableCell>
-                    <TableCell>{employee.phone || "-"}</TableCell>
-                    <TableCell>{employee.role || "-"}</TableCell>
+                    <TableCell>{getNivelAcessoLabel(employee.nivelAcesso)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="icon" onClick={() => openEditDialog(employee)}>
@@ -182,59 +263,51 @@ export default function EmployeesPage() {
               </DialogHeader>
               <form onSubmit={handleSave} className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">Nome *</Label>
+                  <Label htmlFor="nome" className="text-right">Nome *</Label>
                   <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    id="nome"
+                    value={formData.nome}
+                    onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                     className="col-span-3"
                     required
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="cpf" className="text-right">CPF</Label>
-                  <Input
-                    id="cpf"
-                    value={formData.cpf}
-                    onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                    className="col-span-3"
-                    placeholder="000.000.000-00"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">Email</Label>
+                  <Label htmlFor="email" className="text-right">Email *</Label>
                   <Input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="col-span-3"
+                    required
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="phone" className="text-right">Telefone</Label>
-                  <Input
-                    id="phone"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="role" className="text-right">Cargo</Label>
-                  <Input
-                    id="role"
-                    value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="col-span-3"
-                    placeholder="ex: Caixa, Gerente, Estoquista"
-                  />
+                  <Label htmlFor="nivelAcesso" className="text-right">Cargo *</Label>
+                  <Select 
+                    value={formData.nivelAcesso} 
+                    onValueChange={(value) => setFormData({ ...formData, nivelAcesso: value as Employee['nivelAcesso'] })}
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="Selecione o cargo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Administrador">Administrador</SelectItem>
+                      <SelectItem value="Gerente">Gerente</SelectItem>
+                      <SelectItem value="Caixa">Caixa</SelectItem>
+                      <SelectItem value="Financeiro">Financeiro</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button type="submit">Salvar</Button>
+                  <Button type="submit" disabled={isSaving}>
+                    {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Salvar
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>
