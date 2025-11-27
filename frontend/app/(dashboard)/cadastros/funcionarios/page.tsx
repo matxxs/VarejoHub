@@ -19,78 +19,82 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAuth } from "@/src/auth/AuthProvider";
-import { Client, getClientsBySupermarket, createClient, updateClient, deleteClient } from "@/src/api/routes/client";
+import { Employee, getEmployeesBySupermarket, createEmployee, updateEmployee, deleteEmployee } from "@/src/api/routes/employee";
 
-export default function ClientsPage() {
+export default function EmployeesPage() {
   const { supermarketData } = useAuth();
-  const [clients, setClients] = useState<Client[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentClient, setCurrentClient] = useState<Client | null>(null);
+  const [currentEmployee, setCurrentEmployee] = useState<Employee | null>(null);
   
   const [formData, setFormData] = useState({
     nome: "",
-    cpf: "",
     email: "",
-    pontosFidelidade: "0",
+    nivelAcesso: "Caixa" as Employee['nivelAcesso'],
   });
 
-  // Load clients on mount
+  // Load employees on mount
   useEffect(() => {
     if (supermarketData?.idSupermercado) {
-      loadClients();
+      loadEmployees();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supermarketData?.idSupermercado]);
 
-  const loadClients = async () => {
+  const loadEmployees = async () => {
     if (!supermarketData?.idSupermercado) return;
     
     setIsLoading(true);
     try {
-      const result = await getClientsBySupermarket(supermarketData.idSupermercado);
+      const result = await getEmployeesBySupermarket(supermarketData.idSupermercado);
       if (result.isSuccess && result.value) {
-        setClients(result.value);
+        setEmployees(result.value);
       } else {
-        toast.error(result.error || "Erro ao carregar clientes");
+        toast.error(result.error || "Erro ao carregar funcionários");
       }
     } catch {
-      toast.error("Erro ao carregar clientes");
+      toast.error("Erro ao carregar funcionários");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filteredClients = clients.filter(client =>
-    client.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.cpf?.includes(searchTerm) ||
-    client.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployees = employees.filter(employee =>
+    employee.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.nivelAcesso?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const openNewDialog = () => {
-    setCurrentClient(null);
+    setCurrentEmployee(null);
     setFormData({
       nome: "",
-      cpf: "",
       email: "",
-      pontosFidelidade: "0",
+      nivelAcesso: "Caixa",
     });
     setIsDialogOpen(true);
   };
 
-  const openEditDialog = (client: Client) => {
-    setCurrentClient(client);
+  const openEditDialog = (employee: Employee) => {
+    setCurrentEmployee(employee);
     setFormData({
-      nome: client.nome,
-      cpf: client.cpf || "",
-      email: client.email || "",
-      pontosFidelidade: client.pontosFidelidade.toString(),
+      nome: employee.nome,
+      email: employee.email || "",
+      nivelAcesso: employee.nivelAcesso,
     });
     setIsDialogOpen(true);
   };
@@ -103,6 +107,11 @@ export default function ClientsPage() {
       return;
     }
 
+    if (!formData.email.trim()) {
+      toast.error("Email é obrigatório!");
+      return;
+    }
+
     if (!supermarketData?.idSupermercado) {
       toast.error("Erro: supermercado não identificado");
       return;
@@ -110,58 +119,67 @@ export default function ClientsPage() {
 
     setIsSaving(true);
 
-    const clientData = {
-      idCliente: currentClient?.idCliente || 0,
+    const employeeData = {
+      idUsuario: currentEmployee?.idUsuario || 0,
       idSupermercado: supermarketData.idSupermercado,
       nome: formData.nome.trim(),
-      cpf: formData.cpf.trim() || undefined,
-      email: formData.email.trim() || undefined,
-      pontosFidelidade: parseInt(formData.pontosFidelidade) || 0,
+      email: formData.email.trim(),
+      nivelAcesso: formData.nivelAcesso,
     };
 
     try {
-      if (currentClient?.idCliente) {
-        const result = await updateClient(currentClient.idCliente, clientData);
+      if (currentEmployee?.idUsuario) {
+        const result = await updateEmployee(currentEmployee.idUsuario, employeeData);
         if (result.isSuccess) {
-          toast.success("Cliente atualizado com sucesso!");
+          toast.success("Funcionário atualizado com sucesso!");
           setIsDialogOpen(false);
-          loadClients();
+          loadEmployees();
         } else {
-          toast.error(result.error || "Erro ao atualizar cliente");
+          toast.error(result.error || "Erro ao atualizar funcionário");
         }
       } else {
-        const result = await createClient(clientData);
+        const result = await createEmployee(employeeData);
         if (result.isSuccess) {
-          toast.success("Cliente cadastrado com sucesso!");
+          toast.success("Funcionário cadastrado com sucesso!");
           setIsDialogOpen(false);
-          loadClients();
+          loadEmployees();
         } else {
-          toast.error(result.error || "Erro ao cadastrar cliente");
+          toast.error(result.error || "Erro ao cadastrar funcionário");
         }
       }
     } catch {
-      toast.error("Erro ao salvar cliente");
+      toast.error("Erro ao salvar funcionário");
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleDelete = async (client: Client) => {
-    if (!client.idCliente) return;
+  const handleDelete = async (employee: Employee) => {
+    if (!employee.idUsuario) return;
     
-    if (confirm(`Tem certeza que deseja excluir o cliente "${client.nome}"?`)) {
+    if (confirm(`Tem certeza que deseja excluir o funcionário "${employee.nome}"?`)) {
       try {
-        const result = await deleteClient(client.idCliente);
+        const result = await deleteEmployee(employee.idUsuario);
         if (result.isSuccess) {
-          toast.success("Cliente removido com sucesso!");
-          loadClients();
+          toast.success("Funcionário removido com sucesso!");
+          loadEmployees();
         } else {
-          toast.error(result.error || "Erro ao remover cliente");
+          toast.error(result.error || "Erro ao remover funcionário");
         }
       } catch {
-        toast.error("Erro ao remover cliente");
+        toast.error("Erro ao remover funcionário");
       }
     }
+  };
+
+  const getNivelAcessoLabel = (nivel: string) => {
+    const labels: Record<string, string> = {
+      'Administrador': 'Administrador',
+      'Gerente': 'Gerente',
+      'Caixa': 'Caixa',
+      'Financeiro': 'Financeiro',
+    };
+    return labels[nivel] || nivel;
   };
 
   return (
@@ -169,7 +187,7 @@ export default function ClientsPage() {
       <div className="container mx-auto px-4 py-12 md:py-20">
         <div className="space-y-4 max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-foreground">
-            Clientes
+            Funcionários
           </h1>
         </div>
 
@@ -178,14 +196,14 @@ export default function ClientsPage() {
             <div className="relative w-full max-w-sm">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, CPF ou email..."
+                placeholder="Buscar por nome, email ou cargo..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
               />
             </div>
             <Button onClick={openNewDialog}>
-              <Plus className="mr-2 h-4 w-4" /> Novo Cliente
+              <Plus className="mr-2 h-4 w-4" /> Novo Funcionário
             </Button>
           </div>
 
@@ -193,42 +211,40 @@ export default function ClientsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead>CPF</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead className="text-right">Pontos</TableHead>
+                <TableHead>Nível de Acesso</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
+                  <TableCell colSpan={4} className="text-center h-24">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto" />
                   </TableCell>
                 </TableRow>
-              ) : filteredClients.length === 0 ? (
+              ) : filteredEmployees.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
-                    Nenhum cliente encontrado.
+                  <TableCell colSpan={4} className="text-center h-24">
+                    Nenhum funcionário encontrado.
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredClients.map((client) => (
-                  <TableRow key={client.idCliente}>
-                    <TableCell className="font-medium">{client.nome}</TableCell>
-                    <TableCell>{client.cpf || "-"}</TableCell>
-                    <TableCell>{client.email || "-"}</TableCell>
-                    <TableCell className="text-right">{client.pontosFidelidade}</TableCell>
+                filteredEmployees.map((employee) => (
+                  <TableRow key={employee.idUsuario}>
+                    <TableCell className="font-medium">{employee.nome}</TableCell>
+                    <TableCell>{employee.email || "-"}</TableCell>
+                    <TableCell>{getNivelAcessoLabel(employee.nivelAcesso)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(client)}>
+                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(employee)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
                           className="text-red-500 hover:text-red-600"
-                          onClick={() => handleDelete(client)}
+                          onClick={() => handleDelete(employee)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -243,7 +259,7 @@ export default function ClientsPage() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>{currentClient ? "Editar Cliente" : "Novo Cliente"}</DialogTitle>
+                <DialogTitle>{currentEmployee ? "Editar Funcionário" : "Novo Funcionário"}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSave} className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -257,34 +273,32 @@ export default function ClientsPage() {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="cpf" className="text-right">CPF</Label>
-                  <Input
-                    id="cpf"
-                    value={formData.cpf}
-                    onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                    className="col-span-3"
-                    placeholder="000.000.000-00"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">Email</Label>
+                  <Label htmlFor="email" className="text-right">Email *</Label>
                   <Input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="col-span-3"
+                    required
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="pontosFidelidade" className="text-right">Pontos</Label>
-                  <Input
-                    id="pontosFidelidade"
-                    type="number"
-                    value={formData.pontosFidelidade}
-                    onChange={(e) => setFormData({ ...formData, pontosFidelidade: e.target.value })}
-                    className="col-span-3"
-                  />
+                  <Label htmlFor="nivelAcesso" className="text-right">Cargo *</Label>
+                  <Select 
+                    value={formData.nivelAcesso} 
+                    onValueChange={(value) => setFormData({ ...formData, nivelAcesso: value as Employee['nivelAcesso'] })}
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="Selecione o cargo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Administrador">Administrador</SelectItem>
+                      <SelectItem value="Gerente">Gerente</SelectItem>
+                      <SelectItem value="Caixa">Caixa</SelectItem>
+                      <SelectItem value="Financeiro">Financeiro</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
