@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import { privateApi } from "../api";
 import { Result } from "@/src/types/entities";
 
@@ -10,6 +11,10 @@ export interface Employee {
     nivelAcesso: 'Administrador' | 'Gerente' | 'Caixa' | 'Financeiro';
 }
 
+type ApiError = {
+    message: string;
+};
+
 export async function getEmployeesBySupermarket(supermarketId: number): Promise<Result<Employee[]>> {
     try {
         const response = await privateApi.get<Employee[]>(`/user/supermarket/${supermarketId}`);
@@ -18,11 +23,12 @@ export async function getEmployeesBySupermarket(supermarketId: number): Promise<
             value: response.data,
             error: "",
         };
-    } catch (error: unknown) {
-        return {
-            isSuccess: false,
-            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar funcionários",
-        };
+    } catch (error) {
+        const defaultError = "Erro ao buscar funcionários";
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message };
+        }
+        return { isSuccess: false, error: defaultError };
     }
 }
 
@@ -34,11 +40,12 @@ export async function getEmployeeById(employeeId: number): Promise<Result<Employ
             value: response.data,
             error: "",
         };
-    } catch (error: unknown) {
-        return {
-            isSuccess: false,
-            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao buscar funcionário",
-        };
+    } catch (error) {
+        const defaultError = "Erro ao buscar funcionário";
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message };
+        }
+        return { isSuccess: false, error: defaultError };
     }
 }
 
@@ -50,11 +57,12 @@ export async function createEmployee(employee: Omit<Employee, 'idUsuario'>): Pro
             value: response.data,
             error: "",
         };
-    } catch (error: unknown) {
-        return {
-            isSuccess: false,
-            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao criar funcionário",
-        };
+    } catch (error) {
+        const defaultError = "Erro ao criar funcionário";
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message };
+        }
+        return { isSuccess: false, error: defaultError };
     }
 }
 
@@ -65,11 +73,12 @@ export async function updateEmployee(employeeId: number, employee: Employee): Pr
             isSuccess: true,
             error: "",
         };
-    } catch (error: unknown) {
-        return {
-            isSuccess: false,
-            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao atualizar funcionário",
-        };
+    } catch (error) {
+        const defaultError = "Erro ao atualizar funcionário";
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message };
+        }
+        return { isSuccess: false, error: defaultError };
     }
 }
 
@@ -80,10 +89,11 @@ export async function deleteEmployee(employeeId: number): Promise<Result<void>> 
             isSuccess: true,
             error: "",
         };
-    } catch (error: unknown) {
-        return {
-            isSuccess: false,
-            error: error instanceof Error && 'response' in error && error.response && typeof error.response === 'object' && 'data' in error.response && error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data && typeof error.response.data.message === 'string' ? error.response.data.message : "Erro ao deletar funcionário",
-        };
+    } catch (error) {
+        const defaultError = "Erro ao deletar funcionário";
+        if (isAxiosError<ApiError>(error) && error.response?.data?.message) {
+            return { isSuccess: false, error: error.response.data.message };
+        }
+        return { isSuccess: false, error: defaultError };
     }
 }
